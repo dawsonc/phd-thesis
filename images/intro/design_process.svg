@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="2400.3872"
+   height="1100.427"
+   viewBox="0 0 635.10245 291.15466"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09, custom)"
+   sodipodi:docname="design_process.svg"
+   inkscape:export-filename="../4ecbc82d/design_process.png"
+   inkscape:export-xdpi="200"
+   inkscape:export-ydpi="200"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="true"
+     inkscape:zoom="0.37937157"
+     inkscape:cx="807.91505"
+     inkscape:cy="698.52361"
+     inkscape:window-width="2560"
+     inkscape:window-height="1043"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid18427"
+       dotted="false"
+       spacingx="26.458333"
+       spacingy="26.458333"
+       empspacing="12"
+       empcolor="#0099e5"
+       empopacity="0.67058824"
+       originx="26.56077"
+       originy="0.11298824"
+       snapvisiblegridlinesonly="false"
+       enabled="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       id="Dot"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Dot"
+       markerWidth="3.6670001"
+       markerHeight="3.6670001"
+       viewBox="0 0 5.6666667 5.6666667"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="m 5,0 c 0,2.76 -2.24,5 -5,5 -2.76,0 -5,-2.24 -5,-5 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="Dot1"
+         sodipodi:nodetypes="sssss" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow4"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow4"
+       markerWidth="10"
+       markerHeight="12"
+       viewBox="0 0 5 6"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid"
+       markerUnits="userSpaceOnUse">
+      <path
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         d="m 1,0 -3,3 h -2 l 3,-3 -3,-3 h 2 z"
+         id="path1741" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(26.560783,0.11299145)">
+    <rect
+       style="fill:#81b29a;fill-opacity:1;stroke:#3f574b;stroke-width:3.26148;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.945098"
+       id="rect234"
+       width="208.40517"
+       height="181.94685"
+       x="160.38075"
+       y="1.6307384"
+       ry="9.9382973" />
+    <text
+       xml:space="preserve"
+       style="font-size:18.3444px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:Montserrat;text-align:center;text-anchor:middle;white-space:pre;inline-size:103.208;display:inline;stroke-width:0.264583"
+       x="150.60094"
+       y="118.99298"
+       id="text7648"
+       transform="translate(113.82682,-85.779318)"><tspan
+         x="150.60094"
+         y="118.99298"
+         id="tspan9025"><tspan
+           style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#333333"
+           id="tspan9023">Design</tspan></tspan></text>
+    <g
+       id="g21448"
+       transform="translate(132.29167)">
+      <rect
+         style="fill:#f4f1de;fill-opacity:1;stroke:#57554e;stroke-width:2.80237;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.945098"
+         id="rect234-3"
+         width="129.59175"
+         height="50.340088"
+         x="-157.34882"
+         y="1.7366095"
+         ry="10" />
+      <text
+         xml:space="preserve"
+         style="font-size:12.7px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:Montserrat;text-align:center;text-anchor:middle;white-space:pre;inline-size:103.208;display:inline;stroke-width:0.264583"
+         x="172.13719"
+         y="118.99298"
+         id="text7648-6"
+         transform="translate(-264.72776,-95.621167)"><tspan
+           x="172.13719"
+           y="118.99298"
+           id="tspan9029"><tspan
+   style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#33322e"
+   id="tspan9027">Select</tspan><tspan
+   y="118.99298"
+   id="tspan9031"> </tspan></tspan><tspan
+           x="172.13719"
+           y="134.86798"
+           id="tspan9035"><tspan
+             style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#33322e"
+             id="tspan9033">architecture</tspan></tspan></text>
+    </g>
+    <g
+       id="g21438"
+       transform="translate(132.29167,-13.39574)">
+      <rect
+         style="fill:#f4f1de;fill-opacity:1;stroke:#57554e;stroke-width:2.80237;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.945098"
+         id="rect19889"
+         width="129.59175"
+         height="50.340088"
+         x="-157.34882"
+         y="80.997574"
+         ry="10" />
+      <text
+         xml:space="preserve"
+         style="font-size:12.7px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:Montserrat;text-align:center;text-anchor:middle;white-space:pre;inline-size:128.969;display:inline;stroke-width:0.264583"
+         x="172.72568"
+         y="118.99298"
+         id="text19893"
+         transform="translate(-265.63413,-16.246163)"><tspan
+           x="172.72568"
+           y="118.99298"
+           id="tspan9039"><tspan
+             style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#33322e"
+             id="tspan9037">Define objective</tspan><tspan
+             y="118.99298"
+             id="tspan9041"> </tspan></tspan><tspan
+           x="172.72568"
+           y="134.86798"
+           id="tspan9045"><tspan
+             style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#33322e"
+             id="tspan9043">and constraints</tspan></tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:12.7px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:Montserrat;text-align:start;text-anchor:start;white-space:pre;inline-size:185.418;display:inline;stroke-width:0.264583"
+       x="128.62997"
+       y="118.99298"
+       id="text19905"
+       transform="translate(43.962868,-50.854317)"><tspan
+         x="128.62997"
+         y="118.99298"
+         id="tspan9049"><tspan
+           style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#333333"
+           id="tspan9047">1) Automate parameter </tspan></tspan><tspan
+         x="128.62997"
+         y="134.86798"
+         id="tspan9053"><tspan
+           style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#333333"
+           id="tspan9051">tuning for robust design
+</tspan></tspan><tspan
+         x="128.62997"
+         y="150.74298"
+         id="tspan9057"><tspan
+           style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#333333"
+           id="tspan9055">
+</tspan></tspan><tspan
+         x="128.62997"
+         y="166.61798"
+         id="tspan9061"><tspan
+           style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#333333"
+           id="tspan9059">2) Explore design space and </tspan></tspan><tspan
+         x="128.62997"
+         y="182.49298"
+         id="tspan9065"><tspan
+           style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#333333"
+           id="tspan9063">suggest alternatives</tspan></tspan></text>
+    <g
+       id="g21443"
+       transform="translate(131.03959,-25.206267)">
+      <rect
+         style="fill:#f4f1de;fill-opacity:1;stroke:#57554e;stroke-width:2.80237;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.945098"
+         id="rect21429"
+         width="129.59175"
+         height="50.340088"
+         x="-156.19919"
+         y="158.67332"
+         ry="10" />
+      <text
+         xml:space="preserve"
+         style="font-size:12.7px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:Montserrat;text-align:center;text-anchor:middle;white-space:pre;inline-size:114.791;display:inline;stroke-width:0.264583"
+         x="172.72568"
+         y="118.99298"
+         id="text21433"
+         transform="translate(-264.7258,61.770636)"><tspan
+           x="172.72568"
+           y="118.99298"
+           id="tspan9069"><tspan
+             style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#33322e"
+             id="tspan9067">Specify</tspan><tspan
+             y="118.99298"
+             id="tspan9071"> </tspan></tspan><tspan
+           x="172.72568"
+           y="134.86798"
+           id="tspan9075"><tspan
+             style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#33322e"
+             id="tspan9073">parameters</tspan></tspan></text>
+    </g>
+    <rect
+       style="fill:#e07a5f;fill-opacity:1;stroke:#572f25;stroke-width:3.26434;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.945098"
+       id="rect21450"
+       width="208.51535"
+       height="182.16997"
+       x="398.39413"
+       y="1.5191785"
+       ry="9.9504843" />
+    <text
+       xml:space="preserve"
+       style="font-size:18.3444px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:Montserrat;text-align:center;text-anchor:middle;white-space:pre;inline-size:131.25;display:inline;stroke-width:0.264583"
+       x="150.60094"
+       y="118.99298"
+       id="text21454"
+       transform="translate(352.80236,-85.779318)"><tspan
+         x="150.60094"
+         y="118.99298"
+         id="tspan9079"><tspan
+           style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#331c16"
+           id="tspan9077">Verification</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12.7px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:Montserrat;text-align:start;text-anchor:start;white-space:pre;inline-size:187.697;display:inline;stroke-width:0.264583"
+       x="128.62997"
+       y="118.99298"
+       id="text21458"
+       transform="translate(282.08797,-50.854317)"><tspan
+         x="128.62997"
+         y="118.99298"
+         id="tspan9083"><tspan
+           style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#333333"
+           id="tspan9081">3) Estimate sensitivity and </tspan></tspan><tspan
+         x="128.62997"
+         y="134.86798"
+         id="tspan9087"><tspan
+           style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#333333"
+           id="tspan9085">worst-case performance
+</tspan></tspan><tspan
+         x="128.62997"
+         y="150.74298"
+         id="tspan9091"><tspan
+           style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#333333"
+           id="tspan9089">
+</tspan></tspan><tspan
+         x="128.62997"
+         y="166.61798"
+         id="tspan9095"><tspan
+           style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#333333"
+           id="tspan9093">4) Discover corner cases and </tspan></tspan><tspan
+         x="128.62997"
+         y="182.49298"
+         id="tspan9099"><tspan
+           style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#333333"
+           id="tspan9097">failure modes</tspan></tspan></text>
+    <path
+       style="fill:none;stroke:#1a1a1a;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="m 105.83333,26.458336 h 26.45833 v 66.145831 h 15.875"
+       id="path21575"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="fill:none;stroke:#1a1a1a;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow4)"
+       d="m 105.83333,92.604172 h 26.45833 v -1e-5 h 24.4559"
+       id="path22303"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="fill:none;stroke:#1a1a1a;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="m 105.83333,158.75 h 26.45833 v -66.145833 h 21.16666"
+       id="path22354"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="fill:none;stroke:#1a1a1a;stroke-width:2.64583;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow4)"
+       d="m 370.41683,92.604172 24.45601,-1e-5"
+       id="path23279"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#1a1a1a;stroke-width:3.96875;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Dot)"
+       d="m 502.70828,185.20833 v 66.14582 h -238.12496 v -67.73332"
+       id="path23285"
+       sodipodi:nodetypes="cccc" />
+    <g
+       id="g25897"
+       transform="translate(-13.229179,-26.458349)">
+      <rect
+         style="fill:#f2cc8f;fill-opacity:1;stroke:#574933;stroke-width:3.4111;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.945098"
+         id="rect23939"
+         width="208.36859"
+         height="75.963898"
+         x="292.63446"
+         y="239.83055"
+         ry="10.872987" />
+      <text
+         xml:space="preserve"
+         style="font-size:16.2278px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:Montserrat;text-align:center;text-anchor:middle;white-space:pre;inline-size:205.736;display:inline;stroke-width:0.264583"
+         x="150.60094"
+         y="118.99298"
+         id="text23943"
+         transform="translate(246.26305,152.59159)"><tspan
+           x="150.60094"
+           y="118.99298"
+           id="tspan9103"><tspan
+   style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#332b1e"
+   id="tspan9101">5) Verification-based</tspan><tspan
+   y="118.99298"
+   id="tspan9105"> </tspan></tspan><tspan
+           x="150.60094"
+           y="139.27774"
+           id="tspan9109"><tspan
+             style="font-weight:600;-inkscape-font-specification:'Montserrat Semi-Bold';fill:#332b1e"
+             id="tspan9107">design feedback</tspan></tspan></text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,11 @@
+% From mitthesis package
+% Version: 1.01, 2023/06/19
+% Documentation: https://ctan.org/pkg/mitthesis
+%
+% The abstract environment creates all the required headers and footnote. 
+% You only need to add the text of the abstract itself.
+%
+% Approximately 500 words or less; try not to use formulas or special characters
+% If you don't want an initial indentation, do \noindent at the start of the abstract
+
+Before robots can be deployed in safety-critical environments, we must be able to verify they they will perform safely, ideally without the risk or expense of real-world testing. A wide variety of formal methods and simulation-driven techniques have been developed to conduct this verification, but they typically rely on difficult-to-construct mathematical models or else use sample-inneficient black-box optimization methods. In this thesis, I propose to develop a suite of tools that use program analysis tools like automatic differentiation to automatically construct mathematical models of the system under test and accelerate verification of robots and other autonomous systems. These tools rely on two technical innovations: first, the use of general-purpose automatic differentiation and probabilistic programming methods to introspect simulators of complex autonomous systems, and second: reframing the verification problem as a Bayesian inference problem (rather than an optimization problem) to make use of high-performance gradient-based inference algorithms. In addition to these technical innovations to solve verification problems, my thesis will also contribute a novel capability in the form of verification-guided design. Existing verification methods provide little insight to system designers about how to improve their systems to make them safer. In my thesis, I propose a novel adversarial inference algorithm to close the loop between verification and design, allowing the system designer to automatically generate and preemtively repair adversarial test cases to improve the safety of the system under test.

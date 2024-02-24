@@ -1,0 +1,19 @@
+// Workspace settings
+{
+    // Exclude latex-specific files from file explorer
+    "files.exclude": {
+        "**/*.aux": true,
+        "**/*.bbl": true,
+        "**/*.blg": true,
+        "**/*.log": true,
+        "**/*.out": true,
+        "**/*.synctex.gz": true,
+        "**/*.toc": true,
+        "**/*.fdb_latexmk": true,
+        "**/*.fls": true,
+        "**/*.bcf": true,
+        "**/*.run.xml": true,
+        "**/*.lot": true,
+        "**/*.lof": true
+    }
+}

@@ -1,0 +1,90 @@
+\ProvidesPackage{mymacros}[2018/04/30 v1.0 My LaTeX macros, collected over several semesters]
+
+\RequirePackage{siunitx}
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{bm}
+% \RequirePackage{undertilde, bm}
+% \RequirePackage{geometry}
+% \RequirePackage{marginnote}
+
+% Some useful math notation
+\newcommand{\mat}[2][b]{\begin{#1matrix}#2\end{#1matrix}}
+\newcommand{\maps}{\colon}
+\renewcommand{\v}[1]{\ensuremath{\vec{#1}}}
+\newcommand{\h}[1]{\ensuremath{\hat{#1}}}
+\newcommand{\linearencode}[3]{[#1]_{\mathcal{#3} \leftarrow \mathcal{#2}}}
+\newcommand{\basis}[3]{\mathcal{#1} = \{ {#2}_1, \dots, {#2}_{#3} \} }
+\newcommand{\encode}[2]{[#1]_{\mathcal{#2}}}
+% Define some math operators
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\vspan}{span}
+\DeclareMathOperator{\nullity}{nullity}
+\DeclareMathOperator{\kernel}{ker}
+\DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\trace}{tr}
+\DeclareMathOperator{\sign}{sign}
+% Define symbols
+\newcommand{\R}{\ensuremath{\mathbb{R}}}
+\newcommand{\bD}{\ensuremath{\mathscr{D}}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cV}{\mathcal{V}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\pe}{\phantom{-}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}}
+
+
+\newcommand{\pn}[1]{\left( #1 \right)}
+\newcommand{\abs}[1]{\left| #1 \right|}
+\newcommand{\bk}[1]{\left[ #1 \right]}
+\newcommand{\vc}[1]{\left\langle #1 \right\rangle}
+\newcommand{\pder}[2]{\dfrac{\partial #1}{\partial #2}}
+\newcommand{\der}[2]{\frac{d #1}{d #2}}
+
+\newcommand{\determinant}[1]{\text{det}#1}
+
+\let\oldvec\vec
+\renewcommand{\vec}[1]{\boldsymbol{\mathbf{#1}}}
+% \renewcommand{\vec}[1]{\utilde{#1}}
+\renewcommand{\v}[1]{\vec{#1}}
+% \let\oldhat\hat
+% \renewcommand{\hat}[1]{\oldhat{\mathbf{#1}}}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\newcommand{\eval}[1]{\left.\pn{#1} \right|}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+% command to make 2in wide image centered on page
+\newcommand{\diagramsize}[2]{\begin{center}\includegraphics[width=#1]{#2}\end{center}}
+\newcommand{\diagram}[1]{\diagramsize{2in}{#1}}
+
+
+% 6.255 macros
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\optproblem}[3]{
+  \begin{align*}
+    \text{#1}\qquad #2 \\
+    \text{s.t.}\qquad #3
+  \end{align*}
+}
+\newcommand{\minproblem}[2]{\optproblem{minimize}{#1}{#2}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\newcommand{\expectation}{\mathop{\mathbb{E}}}
+
+\newcommand{\chuchucomment}[1]{{\color{red} (Chuchu: #1)}}
+\newcommand{\chuchuchange}[1]{{\color{red} #1}}
+
+% STL operators
+\newcommand{\eventually}{\lozenge}
+\newcommand{\always}{\square}
+\newcommand{\until}{\mathcal{U}}
