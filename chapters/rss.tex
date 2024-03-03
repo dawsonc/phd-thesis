@@ -1,5 +1,8 @@
 \chapter{General-purpose design optimization with statistical robustness certificates}\label{ch:rss}
 
+This chapter is based on the author's published work~\cite{dawsonCertifiableRobotDesign2022}.
+
+% TODO update this for flow
 To design complex systems, engineers in many fields use computer-aided tools to boost their productivity. Mechanical engineers can use a suite of 3D CAD (computer-aided design) and FEA (finite-element analysis) tools to design structures and understand their performance. Likewise, electrical engineers use electronic design automation tools, including hardware description languages like Verilog, to design and analyze large-scale, reliable, and yet highly complex integrated circuits. Sadly, when it comes to designing autonomous systems and robots, engineers often take an ad-hoc approach, relying heavily on experience and tedious parameter tuning.
 
 Two factors have made it difficult to develop automated design tools for robotics. The first is complexity: most robots are composed of many interacting subsystems. Although some tools may aid in designing certain subsystems (e.g. Simulink for controllers, SolidWorks or CATIA for hardware, custom software for training perception systems), these tools cover only a small part of the overall robotics design problem, which includes sensing, actuation, perception, navigation, control, and decision-making subsystems. In addition to being interconnected, these subsystems often have a large number of parameters that require tuning to achieve good performance (neural network-based perception is an extreme example of this trend). Moreover, since few robotic systems are exactly alike, an effective design tool must allow the user to select an appropriate level of abstraction for the problem at hand. As a result, there is a need for flexible computational tools that can help designers optimize complex robotic systems.
@@ -176,65 +179,75 @@ We tested the initial and optimized design in hardware using the Turtlebot 3 pla
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=0.8\linewidth]{rss/agv_simulation_stacked.png}
-    \caption{Simulated trajectories for the initial (top) and optimized (bottom) AGV designs. Color indicates the value of the navigation function. Beacon positions are bounded within the area shown.}
-    \label{ch:rss:fig:agv_representative_trajectories}
-\end{figure}
-
-\begin{figure}[tb]
-    \centering
-    \begin{subfigure}[t]{0.5\linewidth}
+    \begin{subfigure}[c]{0.45\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{rss/agv_initial_composite.png}
-    \end{subfigure}%
-    \begin{subfigure}[t]{0.5\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{rss/agv_optimized_composite.png}
+        \includegraphics[width=\linewidth]{rss/agv_simulation_stacked.png}
+        \caption{Simulated trajectories for the initial (top) and optimized (bottom) AGV designs. Navigation function contours are shown in color.}
+        \label{ch:rss:fig:agv_representative_trajectories}
     \end{subfigure}
-    \caption{Hardware performance of initial (left) and optimized (right) AGV designs. Square (green) shows the goal; triangles (red) show beacon locations. The optimized design eliminates drift relative to goal.}
-    \label{ch:rss:fig:agv_hw}
-\end{figure}
+    \quad
+    \begin{subfigure}[c]{0.45\linewidth}
+        \begin{subfigure}[t]{\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{rss/agv_initial_composite.png}
+        \end{subfigure}
 
-\begin{figure}[tb]
-    \centering
-    \includegraphics[width=\linewidth]{rss/agv_hw_covariance.png}
-    \caption{Hardware results for EKF state estimates and posterior error covariance $3\sigma$ ellipse for initial and optimized designs.}
-    \label{ch:rss:fig:agv_hw_cov}
+        \begin{subfigure}[t]{\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{rss/agv_optimized_composite.png}
+        \end{subfigure}
+        \caption{Hardware performance of initial (top) and optimized (bottom) AGV designs. Square (green) shows the goal; triangles (red) show beacon locations. The optimized design eliminates drift relative to goal.}
+        \label{ch:rss:fig:agv_hw}
+    \end{subfigure}
 \end{figure}
 
 Finally, we apply the robustness analysis from Section~\ref{ch:rss:analysis} to certify the maximum absolute estimation error $\norm{x_t - \hat{x}_t}$ in the optimized design (in meters, projected into the $xy$ plane). Note that this error is different from the cost used during optimization, but we can still apply Algorithm~\ref{ch:rss:alg:worst_case_cost} simply by changing the cost function for the duration of the analysis. Using block size $N = 1000$ and sample size $M = 1000$, we fit a GEVD using Algorithm~\ref{ch:rss:alg:worst_case_cost} to the maximum estimation error for both the initial and optimized designs. These distributions are shown in Fig.~\ref{ch:rss:fig:agv_gevd}; the optimized design significantly reduces the expected maximum estimation error. We observe that the 97\% confidence level for the shape parameter $\xi = 0.059$ is positive, so we cannot conclude that the worst-case estimation error is bounded, but we can derive a high-confidence bound of \SI{0.21}{m} for our optimized design.
 
-\begin{figure}[t]
+\begin{figure}[tb]
     \centering
-    \includegraphics[width=0.9\linewidth]{rss/agv_worst_case_error.png}
-    \caption{GEVD CDF fit using Algorithm~\ref{ch:rss:alg:worst_case_cost} for the maximum absolute estimation error in the $xy$-plane in both the initial and optimized designs, with 97\% confidence levels.}
-    \label{ch:rss:fig:agv_gevd}
+    \begin{subfigure}[c]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{rss/agv_hw_covariance.png}
+        \caption{Hardware results for EKF state estimates and posterior error covariance $3\sigma$ ellipse for initial and optimized AGV designs.}
+        \label{ch:rss:fig:agv_hw_cov}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}[c]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{rss/agv_worst_case_error.png}
+        \caption{GEVD CDF fit using Algorithm~\ref{ch:rss:alg:worst_case_cost} for the maximum absolute estimation error in the $xy$-plane in both the initial and optimized AGV designs, with 97\% confidence levels.}
+        \label{ch:rss:fig:agv_gevd}
+    \end{subfigure}
 \end{figure}
 
 \subsection{Case study: collaborative multi-robot manipulation}\label{ch:rss:case2}
 
-\begin{figure}[b!]
-    \centering
-    \includegraphics[width=0.5\linewidth]{rss/mam_example.png}
-    \caption{Multi-agent manipulation design optimization problem. The goal is to find parameters for robot controllers and a neural network planner that push the box from an initial position (solid) to a desired position (striped).}
-    \label{ch:rss:fig:mam_example}
-\end{figure}
-
 Our second example involves finding a control strategy for multi-agent collaborative manipulation. In this setting, two ground robots must collaborate to push a box from its current location to a target pose (as in Fig.~\ref{ch:rss:fig:mam_example}). Given the desired box pose and the current location of each robot, a neural network plans a trajectory for each robot, which the robots then track using a feedback controller ($\theta$ includes both the neural network parameters and the tracking controller gains, with a total of 454 design parameters). The exogenous parameters include the coefficient of friction for each contact pair, the mass of the box, the desired pose of the box, and the initial pose for each robot (a total of 13 exogenous parameters; we vary the desired box pose and initial robot poses to prevent over-fitting during optimization). The cost function is simply the squared error between the desired box pose (including position and orientation) and its true final pose after a \SI{4}{s} simulation. A full definition of this design problem and contact dynamics model is included in Table~\ref{ch:rss:tab:mam_design_problem} in the appendix. We implement the contact dynamics simulator, trajectory planning neural network, and path tracking controller in Python using JAX.
 
-\begin{figure}[t]
+\begin{figure}[tb]
     \centering
-    \includegraphics[width=0.8\linewidth]{rss/mam_sensitivity_friction.png}
-    \caption{GEVD CDF fit using Algorithm~\ref{ch:rss:alg:sensitivity} for the maximum sensitivity of the optimized collaborative manipulation strategy to variation in friction coefficient. $z$ has units of meters per unit change in friction coefficient.}
-    \label{ch:rss:fig:mam_gevd}
+    \begin{subfigure}[c]{0.45\linewidth}
+        \centering
+        \includegraphics[width=0.7\linewidth]{rss/mam_example.png}
+        \caption{Multi-agent manipulation design optimization problem. The goal is to find parameters for robot controllers and a neural network planner that push the box from an initial position (solid) to a desired position (striped).}
+        \label{ch:rss:fig:mam_example}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}[c]{0.45\linewidth}
+        \centering
+        \includegraphics[width=0.8\linewidth]{rss/mam_sensitivity_friction.png}
+        \caption{GEVD CDF fit using Algorithm~\ref{ch:rss:alg:sensitivity} for the maximum sensitivity of the optimized collaborative manipulation strategy to variation in friction coefficient. $z$ has units of meters per unit change in friction coefficient.}
+        \label{ch:rss:fig:mam_gevd}
+    \end{subfigure}
 \end{figure}
 
-\begin{figure*}[tb!]
+\begin{figure}[tb]
     \centering
     \includegraphics[width=0.9\linewidth]{rss/mam_composite_w_sim.png}
     \caption{Left: Initial (top) and optimized (bottom) manipulation strategies in simulation (light/dark colors indicate initial/final positions, stripes indicate desired position). Right: Optimized manipulation strategy deployed in hardware (video included in the supplementary materials). (a) The robots first move to positions around the box. (b) Using the optimized neural network, the robots plan a cubic spline trajectory pushing the box to its desired location. (c-d) The robots execute the plan by tracking that trajectory.}
     \label{ch:rss:fig:mam_hw}
-\end{figure*}
+\end{figure}
+
 
 % \begin{figure}[tb!]
 %     \centering
@@ -258,9 +271,18 @@ We tested the optimized design in hardware, again using the Turtlebot 3 platform
 
 After successfully testing the optimized design in the laboratory, it is natural to ask how its performance might change as conditions (particularly the coefficients of friction) change. Using $M = 500$ blocks of size $N=1000$ each, we use Algorithm~\ref{ch:rss:alg:sensitivity} to fit a GEVD for the sensitivity constant $L$ with respect to the coefficients of friction between each contact pair. We do this by allowing these coefficients to vary and freezing other elements of $\phi$ at nominal values (box mass \SI{1}{kg} and target pose $[0.3, 0.3, 0.3]$). The fit distribution is shown in Fig.~\ref{ch:rss:fig:mam_gevd}. The 97\% confidence level for the shape parameter is $\xi = 0.118 > 0$, so we cannot conclude that the performance of our design is Lipschitz with respect to the friction coefficients, but we can estimate the 97\% confidence level for $L$ as $0.63$.
 
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{rss/mam_more.png}
+    \caption{Additional examples of optimized multi-agent manipulation behavior in simulation, showing that the optimized strategy reaches the goal in most cases. Each example shows the results of executing the optimized pushing strategy for \SI{4}{s} with a randomly selected set of friction coefficients, random target pose, and random initial robot poses. Light/dark colors indicate initial/final positions, respectively, and the striped box indicates the target pose.}
+    \label{ch:rss:fig:mam_more}
+\end{figure}
+
+
 \subsection{Design optimization ablation study}\label{ch:rss:ablation}
 
-\begin{figure*}[t]
+\begin{figure}[t]
     \centering
     \begin{subfigure}[t]{0.25\linewidth}
         \centering
@@ -288,7 +310,7 @@ After successfully testing the optimized design in the laboratory, it is natural
     \end{subfigure}
     \caption{(a)-(b) Improvement of automatic differentiation (AD) over finite differences (FD) in both case studies. (c)-(d) Effect of variance regularization (VR) in both case studies.}
     \label{ch:rss:fig:ablation}
-\end{figure*}
+\end{figure}
 
 Our case studies in Sections~\ref{ch:rss:case1} and~\ref{ch:rss:case2} help demonstrate the utility of our framework for solving realistic robotics problems. However, it remains to justify the choices we made in designing this framework. For instance, how does automatic differentiation compare with other methods for estimating the gradient (e.g. finite differences)? What benefit does variance regularization in problem~\eqref{ch:rss:design_optimization_nlp} bring? We answer these questions here using an ablation study where we attempt to isolate the impact of each of these features.
 
@@ -322,19 +344,42 @@ To answer these questions, we compare the cumulative distribution function (CDF)
 
 Fig.~\ref{ch:rss:fig:ks_test} compares the estimated GEVDs and empirical data for worst-case performance in the sensor placement example (fit using Algorithm~\ref{ch:rss:alg:worst_case_cost}) and sensitivity in the manipulation example (fit using Algorithm~\ref{ch:rss:alg:sensitivity}). In the former case, we see that the empirical CDF lies between the upper- and lower-confidence limits for the fit distribution, indicating that the fit is neither falsely optimistic at the 97\% level nor conservative at the 3\% level (these conclusions are confirmed by the KS statistics provided in Table~\ref{ch:rss:tab:ks_test_agv} in the appendix). In the latter case, even though the empirical CDF extends slightly beyond the estimated bounds in some regions, the statistical analysis in Table~\ref{ch:rss:tab:ks_test_mam} indicates that the estimated GEVD is neither falsely optimistic at the 97\% level nor conservative at the 3\% level. In addition, we see that the gap between the 3\% and 97\% distributions is relatively small in both examples in Fig.~\ref{ch:rss:fig:ks_test}.
 
-\section{Discussion and Conclusion}
+\begin{table*}[thb]
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \begin{tabular}{r||p{4cm}|c|c|p{5cm}}
+                     & Null Hypothesis                                & \shortstack{KS                                                                                     \\ Statistic} & p-value & Conclusion ($p < 0.05$)                                                   \\ \hline\hline
+        \shortstack{False                                                                                                                                                  \\Optimism} & 97\% GEVD under-estimates worst-case performance & 0.0410         & 0.0337  & Reject; 97\% GEVD \textit{does not} under-estimate worst-case performance \\ \hline
+        Conservatism & 3\% GEVD over-estimates worst-case performance & 0.0529         & 0.00354 & Reject; 3\% GEVD \textit{does not} over-estimate worst-case performance
+    \end{tabular}
+    \caption{Results of one-sided KS tests for the sensor placement case study. These results indicate that Algorithm~\ref{ch:rss:alg:worst_case_cost} is sound in this case.}\label{ch:rss:tab:ks_test_agv}
+\end{table*}
+
+\begin{table*}[thb]
+    \renewcommand{\arraystretch}{1.5}
+    \centering
+    \begin{tabular}{r||p{4cm}|c|c|p{5cm}}
+                     & Null Hypothesis                     & \shortstack{KS                                                                                       \\ Statistic} & p-value              & Conclusion ($p < 0.05$)                                        \\ \hline\hline
+        \shortstack{False                                                                                                                                         \\Optimism} & 97\% GEVD under-estimates sensitivity & 0.0399         & $6.75\times10^{-5}$  & Reject; 97\% GEVD \textit{does not} under-estimate sensitivity \\ \hline
+        Conservatism & 3\% GEVD over-estimates sensitivity & 0.0618         & $1.03\times10^{-10}$ & Reject; 3\% GEVD \textit{does not} over-estimate sensitivity
+    \end{tabular}
+    \caption{Results of one-sided KS tests for the collaborative manipulation case study. These results indicate that Algorithm~\ref{ch:rss:alg:sensitivity} is sound in this case.}\label{ch:rss:tab:ks_test_mam}
+\end{table*}
+
+\section{Discussion}
 
 In this paper, we develop an automated design tool to improve the productivity of robot designers by a) enabling efficient optimization of robot designs and b) allowing users to certify the robustness of those designs. In developing this framework, we make two main algorithmic and theoretical contributions. First, we use differentiable programming for end-to-end optimization of robotic systems, creating a flexible software framework for design optimization. Second, we develop a novel statistical framework for certifying the worst-case performance and sensitivity of optimized designs.
 
 To validate this framework and demonstrate the usefulness of our contributions, we present two case studies to highlight how our framework can be used for design optimization in practical robotics problems. Moreover, we show that our optimized designs are robust enough to deploy in hardware, and data from these hardware experiments validate our optimization approach. Finally, we provide an ablation study to justify the architecture of our optimization framework and a statistical analysis showing the soundness of our robustness analysis techniques. We hope that by combining flexible design optimization with robustness certification in our framework we can increase the productivity of robotics engineers, shorten the design cycle, and help bring more complex robotic systems to life.
 
+
+% TODO update this for flow
 There are a number of interesting directions for future work. First, since our approach relies on sampling from $\Phi$ without any further information, it will require a large number of samples to accurately capture rare events. We can close this gap when more information about $\Phi$ is available, perhaps using adversarial testing or importance sampling. Second, our framework is currently focused on tuning continuous parameters; we hope to incorporate stochastic search over discrete parameters in a future work. Finally, we hope to expand the software implementation of our framework to include a richer library of autonomy building blocks and demonstrate a wider range of applications in designing autonomous systems, including robotic arms, autonomous air and spacecraft, and networked autonomous systems.
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=\linewidth]{rss/agv_gevd_comp.png}
-
-    \includegraphics[width=0.99\linewidth]{rss/mam_gevd_comp_friction.png}
+    \includegraphics[width=0.45\linewidth]{rss/agv_gevd_comp.png}
+    \includegraphics[width=0.45\linewidth]{rss/mam_gevd_comp_friction.png}
     \caption{Comparison of fit GEVD CDFs and empirical CDF for worst-case estimation error in the sensor placement example (top) and sensitivity in the manipulation example (bottom).}
     \label{ch:rss:fig:ks_test}
 \end{figure}

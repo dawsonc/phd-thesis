@@ -1,5 +1,9 @@
 \chapter{Appendix to Chapter~\ref{ch:rss}}
 
+% TODO keep implementation details here, but move KS tables and box figure up. Also make KS figures fit in a single line
+
+% TODO fix formatting of tables
+
 \section{Sensor Placement Design Problem Statement}
 
 We model the robot with discrete-time Dubins dynamics with three state variables ($q = [x, y, \theta]$), two control inputs for linear and angular velocity ($u = [v, \omega]$), and noisy transition model
@@ -70,36 +74,3 @@ Formally, we define this problem in the language of our framework (design parame
         Constraints          & Network parameters were not constrained. $k_v$ and $k_w$ were constrained to be less than 10.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      \\ \hline
     \end{tabular}
 \end{table}
-
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=\linewidth]{rss/mam_more.png}
-    \caption{Additional examples of optimized multi-agent manipulation behavior in simulation, showing that the optimized strategy reaches the goal in most cases. Each example shows the results of executing the optimized pushing strategy for \SI{4}{s} with a randomly selected set of friction coefficients, random target pose, and random initial robot poses. Light/dark colors indicate initial/final positions, respectively, and the striped box indicates the target pose.}
-    \label{ch:rss:fig:mam_more}
-\end{figure*}
-
-\section{Kolmogorov-Smirnov Test Results}
-
-Table~\ref{ch:rss:tab:ks_test_agv} provides results from one-sided KS tests for the GEVD estimated using Algorithm~\ref{ch:rss:alg:worst_case_cost} in the sensor placement case study, while Table~\ref{ch:rss:tab:ks_test_mam} provides similar results for Algorithm~\ref{ch:rss:alg:sensitivity} in the collaborative manipulation case study.
-
-\begin{table*}[thb]
-    \renewcommand{\arraystretch}{1.5}
-    \centering
-    \begin{tabular}{r||p{4cm}|c|c|p{5cm}}
-                     & Null Hypothesis                                & \shortstack{KS                                                                                     \\ Statistic} & p-value & Conclusion ($p < 0.05$)                                                   \\ \hline\hline
-        \shortstack{False                                                                                                                                                  \\Optimism} & 97\% GEVD under-estimates worst-case performance & 0.0410         & 0.0337  & Reject; 97\% GEVD \textit{does not} under-estimate worst-case performance \\ \hline
-        Conservatism & 3\% GEVD over-estimates worst-case performance & 0.0529         & 0.00354 & Reject; 3\% GEVD \textit{does not} over-estimate worst-case performance
-    \end{tabular}
-    \caption{Results of one-sided KS tests for the sensor placement case study. These results indicate that Algorithm~\ref{ch:rss:alg:worst_case_cost} is sound in this case.}\label{ch:rss:tab:ks_test_agv}
-\end{table*}
-
-\begin{table*}[thb]
-    \renewcommand{\arraystretch}{1.5}
-    \centering
-    \begin{tabular}{r||p{4cm}|c|c|p{5cm}}
-                     & Null Hypothesis                     & \shortstack{KS                                                                                       \\ Statistic} & p-value              & Conclusion ($p < 0.05$)                                        \\ \hline\hline
-        \shortstack{False                                                                                                                                         \\Optimism} & 97\% GEVD under-estimates sensitivity & 0.0399         & $6.75\times10^{-5}$  & Reject; 97\% GEVD \textit{does not} under-estimate sensitivity \\ \hline
-        Conservatism & 3\% GEVD over-estimates sensitivity & 0.0618         & $1.03\times10^{-10}$ & Reject; 3\% GEVD \textit{does not} over-estimate sensitivity
-    \end{tabular}
-    \caption{Results of one-sided KS tests for the collaborative manipulation case study. These results indicate that Algorithm~\ref{ch:rss:alg:sensitivity} is sound in this case.}\label{ch:rss:tab:ks_test_mam}
-\end{table*}
