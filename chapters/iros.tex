@@ -1,11 +1,14 @@
 % This chapter is based on my IROS paper, for which IEEE holds the copyright.
 \newcommand{\ieeecopyright}{\copyright 2022 IEEE}
 
-\chapter{Improving robustness using formal specifications and counterexample-guided optimization}\label{ch:iros}
+\chapter{Counterexample-guided Optimization with Formal Specifications}\label{ch:iros}
 
-In Chapter~\ref{ch:rss}, I demonstrate how automatic differentiation can enable end-to-end design optimization for a range of robotic systems. However, the optimization algorithm presented in Chapter~\ref{ch:rss} relies on a variance-regularization heuristic to encourage the robustness of the optimized designs. There are two issues with this approach, which we address in this chapter. First, estimating the cost variance requires a large number of samples of the exogenous parameters $\phi$. First, the methods presented in Chapter~\ref{ch:rss} provide a statistical estimate of the worst-case cost, but they do not provide concrete counterexamples (i.e., specific values of $\phi$ that lead to high cost). This chapter is based on the author's published work~\cite{dawsonRobustCounterexampleguidedOptimization2022b}.
+In Chapter~\ref{ch:rss}, I demonstrate how automatic differentiation can enable end-to-end design optimization for a range of robotic systems. However, the optimization algorithm presented in Chapter~\ref{ch:rss} relies on a variance-regularization heuristic to encourage the robustness of the optimized designs. There are two issues with this approach, which we address in this chapter. First, estimating the cost variance requires a large number of samples of the exogenous parameters $\phi$. First, the methods presented in Chapter~\ref{ch:rss} provide a statistical estimate of the worst-case cost, but they do not provide concrete counterexamples (i.e., specific values of $\phi$ that lead to high cost).
 
-In this chapter, we present a \textit{counterexample-guided} design optimization pipeline that replaces the variance regularization used in Chapter~\ref{ch:rss} with an adversarial optimization that alternates between optimizing the design $\theta$ and a set of adversarial counterexamples $\phi$. In addition, we combine end-to-end design optimization with differentiable temporal logic to allow users to formally specify the desired behavior of the robot. There are different types of temporal logic, but most relevant to robotics problems is \textit{signal temporal logic} (STL), a formal language for specifying properties of real-values continuous-time signals~\cite{donzeBreachToolboxVerification2010,sunMultiagentMotionPlanning2022,pantSmoothOperatorControl2017}. Using STL, a user can specify a variety of robot behaviors by combining logical and temporal operators that specify the desired order and dependencies between subtasks~\cite{plakuMotionPlanningTemporallogic2016,sunMultiagentMotionPlanning2022,takanoContinuousOptimizationBasedTask2021}. Although the syntax of STL can be opaque, there are tools for translating between STL and natural language~\cite{chenNL2TLTransformingNatural2023}.
+% TODO edit for flow
+In this chapter, we present a \textit{counterexample-guided} design optimization pipeline that replaces the variance regularization used in Chapter~\ref{ch:rss} with an adversarial optimization that alternates between optimizing the design $\theta$ and a set of adversarial counterexamples $\phi$. In addition, we combine end-to-end design optimization with differentiable temporal logic to allow users to formally specify the desired behavior of the robot. This chapter is based on the author's published work~\cite{dawsonRobustCounterexampleguidedOptimization2022b}.
+
+There are different types of temporal logic that may be used to specify robot behaviors, but most relevant to robotics problems is \textit{signal temporal logic} (STL), a formal language for specifying properties of real-values continuous-time signals~\cite{donzeBreachToolboxVerification2010,sunMultiagentMotionPlanning2022,pantSmoothOperatorControl2017}. Using STL, a user can specify a variety of robot behaviors by combining logical and temporal operators that specify the desired order and dependencies between subtasks~\cite{plakuMotionPlanningTemporallogic2016,sunMultiagentMotionPlanning2022,takanoContinuousOptimizationBasedTask2021}. Although the syntax of STL can be opaque, there are tools for translating between STL and natural language~\cite{chenNL2TLTransformingNatural2023}.
 
 A number of previous works have approached the problem of synthesizing robot behaviors, most often in the form of motion plans, from STL specifications, using either abstraction-based methods~\cite{plakuMotionPlanningTemporallogic2016}, mixed-integer optimization~\cite{sunMultiagentMotionPlanning2022,yangSynthesisguidedAdversarialScenario2021}, sampling-based planning~\cite{kantaros20,vasile17}, or nonlinear optimization~\cite{pantFlybyLogicControlMultiDrone2018,pantazidesSatelliteMissionPlanning2022,leungBackPropagationSignalTemporal2021}.
 
@@ -159,7 +162,7 @@ An important note is that Algorithm~\ref{ch:iros:alg:cg_gs} is enabled by the au
 
 We validate our robust optimization method on two case studies involving a satellite renezvous problem, which was originally proposed as a benchmark in~\cite{jewisonSpacecraftBenchmarkProblem2016}. We compare our method against state-of-the-art methods for planning and optimization from STL specifications, showing the robustness and scalability of our approach.
 
-\subsection{Satellite rendezvous problems}
+\subsection{Benchmark problems}
 
 In the satellite rendering problem proposed in~\cite{jewisonSpacecraftBenchmarkProblem2016}, a chaser satellite must maneuver to catch a target satellite. We can model the dynamics of the chaser satellite in the Clohessy-Wiltshire-Hill (CHW) coordinate system, which assumes a circular orbit and places the target satellite at the origin, with the $x$-axis pointing away from the Earth, the $y$-axis pointing along the target's orbit, and the $z$-axis pointing out of the orbital plane. In the CHW frame, the chaser satellite's dynamics are approximately linear, with state defined as positions $p_x, p_y, p_z$ and velocities $v_x, v_y, v_z$. The control inputs are the thrusts $u_x, u_y, u_z$ in the $x, y, z$ directions, leading to dynamics:
 \begin{align*}
@@ -189,7 +192,7 @@ In natural language, these formulae read as follows: $\psi_\text{reach target}$ 
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{images/iros/satellite_missions.png}
-    \caption{Two satellite rendezvous missions used in our experiments. In the first mission, the chaser satellite must eventually reach the target while respecting a maximum speed constraint in the region immediately around the target. In the second mission, the chaser must still reach the target and obey the speed limit, but it must also loiter in an observation region for some minimum time before approaching. The first mission requires an STL formula with three predicates and three temporal operators, while the second mission requires five predicates and five temporal operators. Figure \textcopyright IEEE 2022; used with permission.}
+    \caption{Two satellite rendezvous missions used in our experiments. In the first mission, the chaser satellite must eventually reach the target while respecting a maximum speed constraint in the region immediately around the target. In the second mission, the chaser must still reach the target and obey the speed limit, but it must also loiter in an observation region for some minimum time before approaching. The first mission requires an STL formula with three predicates and three temporal operators, while the second mission requires five predicates and five temporal operators. Figure \textcopyright{} IEEE 2022; used with permission.}
     \label{ch:iros:fig:mission_specs}
 \end{figure}
 
@@ -211,37 +214,45 @@ Figs.~\ref{ch:iros:fig:mission_1_comparison} and~\ref{ch:iros:fig:mission_2_comp
 
 \begin{figure}[tbh]
     \centering
-    \includegraphics[width=0.7\linewidth]{iros/mission_1_comparison.png}
-    \caption{Comparison of different STL planning methods on the first example mission, averaged over 50 random seeds. Left: the robustness margin $\rho(\psi_1)$ computed for the optimized design parameters and worst-case exogenous parameters. Right: the planning time required by each method. Our method (CG) achieves much higher robustness than all other methods (satisfying the STL specification despite adversarial perturbations in all but 3 instances) and runs twice as fast as the next-most-robust method. Figure \textcopyright IEEE 2022; used with permission.}
+    \includegraphics[width=\linewidth]{iros/mission_1_comparison.png}
+    \caption{Comparison of different STL planning methods on the first example mission, averaged over 50 random seeds. Left: the robustness margin $\rho(\psi_1)$ computed for the optimized design parameters and worst-case exogenous parameters. Right: the planning time required by each method. Our method (CG) achieves much higher robustness than all other methods (satisfying the STL specification despite adversarial perturbations in all but 3 instances) and runs twice as fast as the next-most-robust method. Figure \textcopyright{} IEEE 2022; used with permission.}
     \label{ch:iros:fig:mission_1_comparison}
 \end{figure}
 
 \begin{figure}[tbh]
     \centering
-    \includegraphics[width=0.7\linewidth]{iros/mission_2_comparison.png}
-    \caption{Comparison of different STL planning methods on the second example mission, averaged over 50 random seeds. Left: the robustness margin $\rho(\psi_2)$ computed for the optimized design parameters and worst-case exogenous parameters. Right: time required by each method to find a plan. Our method (CG) finds much more robust plans, satisfying the specification in all but 4 instances compared to 17 failures for the next-best method (NLopt with 64 examples). Our method also runs more than twice as fast as the next-most-robust method. Figure \textcopyright IEEE 2022; used with permission.}
+    \includegraphics[width=\linewidth]{iros/mission_2_comparison.png}
+    \caption{Comparison of different STL planning methods on the second example mission, averaged over 50 random seeds. Left: the robustness margin $\rho(\psi_2)$ computed for the optimized design parameters and worst-case exogenous parameters. Right: time required by each method to find a plan. Our method (CG) finds much more robust plans, satisfying the specification in all but 4 instances compared to 17 failures for the next-best method (NLopt with 64 examples). Our method also runs more than twice as fast as the next-most-robust method. Figure \textcopyright{} IEEE 2022; used with permission.}
     \label{ch:iros:fig:mission_2_comparison}
 \end{figure}
 
-Across both missions, we find that our method consistently yields more robust plans than prior methods. In the first mission, our method finds designs that satisfy the STL specifications in all but 3 trials, despite the worst-case adversarial disturbance, while the next-best method (NLopt with 64 domain randomization samples) fails on 14 out of 50 trials and takes more than twice as long to run (\SI{114.3}{s} vs. \SI{53.7}{s} for our method). These results demonstrate the importance of using high-quality counterexamples during optimization: instead of 64 random samples, our method uses 8 initial random samples and 1--4 (median 2) additional counterexamples found using Algorithm~\ref{ch:iros:alg:cg_gs}. Because the MIP cannot practically be solved multiple times to consider variation in $\phi$, the solutions found using the MIP method tend to be relatively fragile; moreover, MIP failed to find a feasible solution for the first mission within \SI{500}{s} in 16 out of 50 trials.
+Across both missions, we find that our method consistently yields more robust plans than prior methods. In the first mission, our method finds designs that satisfy the STL specifications in all but 3 trials despite the worst-case adversarial disturbance (an example trajectory is shown in Fig.~\ref{ch:iros:fig:mission_1_traj}), while the next-best method (NLopt with 64 domain randomization samples) fails on 14 out of 50 trials and takes more than twice as long to run (\SI{114.3}{s} vs. \SI{53.7}{s} for our method). These results demonstrate the importance of using high-quality counterexamples during optimization: instead of 64 random samples, our method uses 8 initial random samples and 1--4 (median 2) additional counterexamples found using Algorithm~\ref{ch:iros:alg:cg_gs}. Because the MIP cannot practically be solved multiple times to consider variation in $\phi$, the solutions found using the MIP method tend to be less robust; moreover, MIP failed to find a feasible solution for the first mission within \SI{500}{s} in 16 out of 50 trials.
 
-In the second mission, TODO
+Our method also performs well on the second mission, satisfying the STL requirement on 46 out of 50 random trials; a representative trajectory is shown in Fig.~\ref{ch:iros:fig:mission_2_traj}. Despite an additional \SI{500}{s} of solving time, the MIP method fails to find a feasible solution in $16$ out of 50 trials (the MIP encoding requires 2806 binary variables). The second-most-robust method, after ours, is NLOpt with 64 random examples; this method fails to find a design that satisfies the STL requirement on 17 out of 50 trials despite taking twice as long to run as our method (which required a median of 2 iterations of Algorithm~\ref{ch:iros:alg:cg_gs}).
 
 \begin{figure}[tbh]
     \centering
-    \begin{subfigure}[c]{0.45\linewidth}
+    \begin{subfigure}[b]{0.45\linewidth}
         \centering
         \includegraphics[width=0.9\linewidth]{iros/satellite_mission1_traj.png}
-        \caption{Mission 1 (rendezvous with speed constraint).}
+        \caption{Mission 1.}
         \label{ch:iros:fig:mission_1_traj}
     \end{subfigure}
     \quad
-    \begin{subfigure}[c]{0.45\linewidth}
+    \begin{subfigure}[b]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{iros/satellite_mission2_traj.png}
-        \caption{Mission 2 (loiter then rendezvous with speed constraint).}
+        \caption{Mission 2.}
         \label{ch:iros:fig:mission_2_traj}
     \end{subfigure}
-    \caption{Optimized trajectories found using our method for the two satellite rendezvous missions. Figures \textcopyright IEEE 2022; used with permission.}
+    \caption{Optimized trajectories found using our method for the two satellite rendezvous missions. Figures \textcopyright{} IEEE 2022; used with permission.}
 \end{figure}
 
+\section{Discussion}
+
+% TODO make sure that this flows.
+In this chapter, we introduce a counterexample-guided method for end-to-end robot design optimization based on formal behavior specification. This chapter closes two gaps that were left open in Chapter~\ref{ch:rss}. First, by using STL to directly specify the desired behavior, we avoid the need for manual reward design. Second, we consider robustness to worst-case disturbances at design time using counterexample-guided adversarial optimization (rather than the post-hoc statistical method from Chapter~\ref{ch:rss}).
+
+Our empirical results show that our adversarial optimization method yields optimized designs that are more robust than those found by competing methods, despite requiring substantially less computational effort than the next-best method. That said, all methods described in this chapter (aside from intractable MIP-based methods) are inherently local; they rely on local optimization to find both promising designs and adversarial counterexamples. As a result, there is a risk that our method (or any method that relies on local gradient-based optimization) will get stuck in a local optimum. At first glance, this sub-optimality might not seem like a large issue; after all, local optimization methods have been successful in many robotics and learning applications~\cite{dawsonCertifiableRobotDesign2022}. Unfortunately, for safety-critical applications, a sub-optimal counterexample is potentially worse than no counterexample at all. This is because sub-optimal counterexamples --- i.e. artificially easy counterexamples --- can lead to overoptimistic false negatives where we erroneously believe that we have successfully addressed the worst-case disturbance. We can see this issue manifest in Figs.~\ref{ch:iros:fig:mission_1_comparison} and~\ref{ch:iros:fig:mission_2_comparison} in the few failures that remain even after Algorithm~\ref{ch:iros:alg:cg_gs} converges; if Algorithm~\ref{ch:iros:alg:cg_gs} converges to a local Nash equilibrium, then it will not correctly identify the true worst-case disturbance.
+
+In the next chapter, we will introduce a novel reformulation of the counterexample-guided optimization problem that addresses this issue, combing global probabilistic inference methods with efficient gradient-based search to reduce the risk of overconfidence due to artificially easy counterexamples.

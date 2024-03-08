@@ -1,4 +1,4 @@
-\chapter{General-purpose design optimization with statistical robustness certificates}\label{ch:rss}
+\chapter{End-to-end Design Optimization with Statistical Robustness Certificates}\label{ch:rss}
 
 This chapter is based on the author's published work~\cite{dawsonCertifiableRobotDesign2022}.
 
@@ -15,7 +15,7 @@ Our goal is to develop a general-purpose robot design optimization tool that can
 
 Our experiments show that our methods can (in our first case study) optimize a robotic system with five subsystems and six design variables in under five minutes, achieving an 8.4x performance improvement over the initial design. In our second case study, we optimize a system with three subsystems and 454 design variables in under an hour, achieving a 44\% performance improvement over the initial design. Our use of differentiable programming allows us to complete this optimization 32\% and 20x faster, respectively in each example, compared to approximate gradient methods. Both of these designs are certified using a statistical robustness analysis and successfully deployed in hardware. An open-source implementation of our framework, including repeatable code examples, is available at \url{https://github.com/MIT-REALM/architect}.
 
-\section{Related Work}\label{ch:rss:related_work}
+\section{Related work}\label{ch:rss:related_work}
 
 \subsubsection{Design optimization for robotics}
 
@@ -33,7 +33,7 @@ In recent years, the robotics community has also developed special-purpose diffe
 Safety and robustness are critical concerns for any robotic system. When it comes to low-level control, there is a rich history of reachability~\cite{althoff_reachability_review} and stability~\cite{changNeuralLyapunovControl2019,dawsonSafeNonlinearControl2022} analysis tools that can be used to answer questions of safety and robustness for the control subsystem.
 Other works apply reachability analysis at the system level using black-box tools~\cite{fan_dryvr}. This work builds on this history by incorporating formal analysis into a design-optimize-analyze loop to provide rapid feedback on robustness as part of the design process. In particular, we develop a novel statistical method for quantifying the worst-case performance and sensitivity of an optimized design to external perturbations.
 
-\section{Preliminaries and Assumptions}\label{ch:rss:prelim}
+\section{Preliminaries and assumptions}\label{ch:rss:prelim}
 
 Key to the design of robotic systems is the tension between the factors a designer can control and those she cannot. For instance, a designer might be able to choose the locations of sensors and tune controller gains, but she cannot choose the sensor noise or disturbances (e.g. wind) encountered during operation.
 Robot design is therefore the process of choosing feasible values for the controllable factors (here referred to as \textit{design parameters}) that achieve good performance despite the influence of uncontrollable factors (\textit{exogenous parameters}).
@@ -68,7 +68,7 @@ In this problem, the design parameters $\theta$ include the $(x, y)$ locations o
     \label{ch:rss:fig:agv_example}
 \end{figure}
 
-\section{Design Optimization}\label{ch:rss:optimization}
+\section{Design optimization using differentiable programming}\label{ch:rss:optimization}
 
 Given the notation from Section~\ref{ch:rss:prelim}, we can formally pose the robot design optimization problem. In formulating the optimization objective, it is important to consider the variance introduced by the exogenous parameters $\phi$. Simply minimizing the expected value of the cost $\expectation_{\phi \sim \Phi} \big[ J\circ S\pn{\theta, \phi} \big]$ (where $\circ$ denotes composition) can lead to myopic behavior where exceptional performance for some values of $\phi$ compensates for poor performance on other values; this is related to the phenomenon of ``reward hacking'' in reinforcement learning~\cite{amodei2016_ai_safety}.
 
@@ -92,7 +92,7 @@ Of course, these Monte-Carlo estimators will require multiple evaluations of $J\
 
 In this framework, the user need only implement the simulator and cost function for their specific problem using a differentiable programming framework like the JAX library for Python~\cite{jax2018github}, and this implementation can be used automatically for efficient gradient-based optimization. By implementing a library of additional building blocks in this AD paradigm (e.g. estimation algorithms like the EKF), we can provide an AD-based design optimization tool that strikes a productive balance between flexibility and ease of use. At the time of this writing, this library of building blocks includes an EKF for state estimation, the dynamics of various common robot platforms, formal specification languages like signal temporal logic, and differentiable RGB and depth image rendering.
 
-\section{Design Certification via Robustness Analysis}\label{ch:rss:analysis}
+\section{Design certification via robustness analysis}\label{ch:rss:analysis}
 
 Once we have found an optimal choice of design parameters, we need to verify that the design will be robust to uncertainty in the exogenous parameters. Similarly to 3D CAD and FEA packages for mechanical engineers, a successful design tool not only helps an engineer refine her design (i.e. using the design optimization framework in Section~\ref{ch:rss:optimization}) but also helps her analyze and predict its performance. To certify the performance of an optimized design, we are interested in two distinct questions. First, what is the maximum cost we can expect given variation in the exogenous parameters? Second, how sensitive is the cost to external disturbances: by how much can a change in the exogenous parameters increase the cost?
 
@@ -161,7 +161,7 @@ Minimizing $\rm{Var}_{\phi \sim \Phi}[J]$ in addition to $\expectation_{\phi \si
 We can also justify the connection between variance regularization and reducing sensitivity $L$ by looking at the special case where $J \circ S$ is Lipschitz and the elements of $\phi$ are independent. The Bobkov-Houdr\'e variance bound for Lipschitz functions~\cite{bobkov} holds that $\rm{Var}_{\phi \sim \Phi}[J] \leq L^2 \sigma_{\Sigma\phi}^2$,
 where $\sigma_{\Sigma\phi}^2$ is the variance of the sum of elements in $\phi$. This bound does not explicitly show that minimizing $\rm{Var}_{\phi \sim \Phi}[J]$ decreases $L$, but it suggests a correlation that we hope to revisit in future work.
 
-\section{Experimental Results}\label{ch:rss:cases}
+\section{Experimental results}\label{ch:rss:cases}
 
 So far, we have developed the theoretical and algorithmic basis for our robot design framework. It remains for us to empirically answer two questions: first, is our framework useful for solving practical robot design problems? Second, is our statistical method for robustness analysis sound?
 
