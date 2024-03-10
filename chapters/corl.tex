@@ -8,6 +8,8 @@ In Chapters~\ref{ch:rss} and~\ref{ch:iros}, we introduce local gradient-based op
     \item \textbf{Sensitivity to gradient quality: } Many robotic systems, particularly those involving contact or vision, have dynamics that are not differentiable everywhere, as we assumed in previous chapters. Even when these dynamics are smoothed, there are still regions where the gradients can be poorly conditioned (i.e. arbitrarily large) or flat, which will cause a gradient-based optimizer to diverge or get stuck.
 \end{enumerate}
 
+% TODO Emphasize vision in the loop and what we will be able to do if we figure these things out
+
 In this chapter, we address these drawbacks by re-framing the counterexample-guided optimization problem from Chapter~\ref{ch:iros} as a Bayesian inference problems, which we then solve using gradient-accelerated Markov Chain Monte Carlo (MCMC) methods. We demonstrate empirically how this Bayesian inference framework provides improved performance (in both convergence speed and solution quality) over both gradient-based and gradient-free optimization methods, and we provide a theoretical analysis to support these empirical observations. This chapter is based in part on the author's published work in~\cite{dawsonBayesianApproachBreaking2023}.
 
 \section{Related work}
@@ -83,7 +85,7 @@ We have shown how transitioning from gradient-based optimization to inference (i
 
 MCMC sampling methods provide a principled means for balancing exploration and exploitation, and so they are well-suited to problems with multiple modes (particularly when the modes are close together in the search space). However, although MCMC methods enjoy good asymptotic guarantees, including ergodicity and convergence to the target distribution in the inifinite-sample limit, any finite-sample implementation will struggle to explore a highly multi-modal target distribution if the modes are well separated (any finite MCMC run will be biased towards the modes near its starting point). A family of algorithms known as sequential Monte Carlo (SMC) algorithms exist to solve this problem by smoothly interpolating between a sequence of distributions, starting from a simple distribution (e.g., a Gaussian) and ending at the target distribution~\cite{chopinIntroductionSequentialMonte2020}. SMC algorithms are particularly useful for inference problems with multiple modes, since they can be used to sample from the target distribution in a way that is less biased by the initialization. In the following section, we will discuss how SMC can be applied to sample diverse solutions (both failure modes and designs) for practical autonomous system design and verification problems.
 
-\subsection{Sensitivit% TODO include discussion of renderingy to gradient quality}
+\subsection{Sensitivity to gradient quality}% TODO include discussion of rendering
 
 As discussed at the start of this chapter and in prior work~\cite{suhDifferentiableSimulatorsGive2022,suh2021_bundled_gradients}, many practical robotics problems involve non-smooth dynamics that may not be differentiable, or even continuous, at all points. For example, dynamics involving rigid body contact are discontinuous at the point when contact is made or broken. Even when these functions can be smoothed, they may still have poorly behaved gradients (e.g. gradients that are either flat or very large). Prior work~\cite{suhDifferentiableSimulatorsGive2022} identifies the ballistic optimization problem shown in Fig.~\ref{ch:corl:fig:ballistic} as a simple problem that illustrates the effect of both flat gradients and discontinuities.
 
@@ -201,6 +203,8 @@ Pseudocode for RADIUM is provided in Algorithm~\ref{ch:corl:alg:adv_diffusion}. 
 
 RADIUM supports a wide range of subroutines for sampling candidate failures and repaired policies. In our experiments and the provided implementation, we include RMH and MALA (gradient-free and gradient-based MCMC algorithms, respectively). We choose these particular methods to provide a direct comparison between similar algorithms with and without gradients, as MALA reduces to RMH when the gradient is zero. Pseudocode for MALA is included in Algorithm~\ref{ch:corl:alg:mala}.
 
+A final practical consideration is that although the stochasticity in our sampling-based approach can help us explore the design and failure spaces, we incur a degree of sub-optimality as a result. When using gradient-based sampling, we have the option to reduce this sub-optimality by ``quenching'' the solution: switching to simple gradient descent (e.g. using MALA for the first 90 rounds and then gradient descent on the last 10 rounds). In practice, we find that quenching can noticeably improve the final cost without compromising the diversity of predicted failure modes. Quenching is particularly important on problems where the cost function includes penalty terms for constraint satisfaction, where a few rounds of gradient descent can help to satisfy these constraints.
+
 \begin{algorithm}
     \SetAlgoLined
     \SetKwInput{Input}{Input}
@@ -289,11 +293,13 @@ The first term in the parenthesis in~\eqref{ch:corl:eq:marginal} is bounded abov
     \end{align}
 \end{proof}
 
-\subsection{Simulation Experiments}\label{ch:corl:experiments}
+\section{Simulation experiments}\label{ch:corl:experiments}
 
-In this section, we provide empirical comparisons of RADIUM with existing methods for adversarial optimization and policy repair in a range of simulated environments. We have two main goals in this section. First, we seek to understand whether re-framing the failure repair problem from optimization to inference leads to better solutions (i.e. more robust designs and better coverage by the predicted failures). Second, we study whether the gradient-based version of our method yields any benefits over the gradient-free version. After the empirical comparisons in this section, Section~\ref{ch:corl:hw} then demonstrates how well the failure modes and repaired policies generated using our method transfer from simulation to hardware.
+In this section, we provide empirical comparisons of RADIUM with existing methods for adversarial optimization and policy repair in a range of simulated environments. We have two main goals in this section. First, we seek to understand whether re-framing the failure repair problem from optimization to inference leads to better solutions (i.e. more robust designs and better coverage by the predicted failures). Second, we study whether the gradient-based version of our method yields any benefits over the gradient-free version. After the empirical comparisons in this section, Section~\ref{ch:corl:case_studies} then provides three case studies with a more in-depth discussion of how RADIUM can be applied to practical verification and design problems, including two case studies demonstrating how repaired designs can be transferred from simulation to hardware.
 
 We conduct simulation studies on a range of problems from the robotics and cyberphysical systems literature, comparing against previously-published adversarial optimization methods. More detail on each benchmark, baseline, and implementation is provided in the appendix.
+
+\subsection{Experimental setup}
 
 \subsubsection{Baselines}
 
@@ -311,41 +317,42 @@ All methods were run on the same GPU model with the same sample budget for each 
 
 \subsubsection{Benchmark problems}
 
-We rely on two classes of benchmark problem in this work: 3 problems without vision in the loop, and 3 problems with vision in the loop. Each of these problem domains includes multiple environments of varying complexity, for a total of 13 different environments. A summary of these environments is given in Fig~\ref{fig:environments}. More details on the parameters and cost functions used for each environment are given in the supplementary material.
+We rely on two classes of benchmark problem in this work: 3 problems without vision in the loop, and 3 problems with vision in the loop. Each of these problem domains includes multiple environments of varying complexity, for a total of 13 different environments. A summary of these environments is given in Fig~\ref{ch:corl:fig:environments}. More details on the parameters and cost functions used for each environment are given in the supplementary material.
 
 \begin{figure*}[t]
     \centering
     \includegraphics[width=\linewidth]{example-image-a}  % Todo
-    \caption{The different environments used in our simulation studies, including 5 domains without visual feedback and 3 domains with vision in the loop.}\label{fig:environments}
+    \caption{The different environments used in our simulation studies, including 5 domains without visual feedback and 3 domains with vision in the loop.}\label{ch:corl:fig:environments}
 \end{figure*}
 
-\paragraph{Non-vision benchmarks}  % Todo do we need to include all of these environments, or does it distract?
+\paragraph{Non-vision benchmarks}
 %
-\textbf{Search:} a set of seeker robots must cover a region to detect a set of hiders. $\theta$ and $\phi$ define trajectories for the seekers and hiders, respectively. Failure occurs if any hider escapes detection by the seekers (which have fixed sensing radius). This environment has two variants: small (6 seeker vs. 10 hider, $\dim{\theta} = 60$, $\dim{\phi} = 100$) and large (12 seeker vs. 20 hider, $\dim{\theta} = 120$, $\dim{\phi} = 200$).
+\textit{Search:} a set of seeker robots must cover a region to detect a set of hiders. $\theta$ and $\phi$ define trajectories for the seekers and hiders, respectively. Failure occurs if any hider escapes detection by the seekers (which have fixed sensing radius). This environment has two variants: small (6 seeker vs. 10 hider, $\dim{\theta} = 60$, $\dim{\phi} = 100$) and large (12 seeker vs. 20 hider, $\dim{\theta} = 120$, $\dim{\phi} = 200$).
 %
-\textbf{Formation control:} a swarm of drones fly to a goal while maintaining full connectivity with a limited communication radius. $\theta$ defines trajectories for each robot in the swarm, while $\phi$ defines an uncertain wind velocity field. Failure occurs when the second eigenvalue of the graph Laplacian is close to zero. This environment has small (5 agent, $\dim{\theta} = 30$, $\dim{\phi} = 1280$) and large (10 agent, $\dim{\theta} = 100$, $\dim{\phi} = 1280$) variants.
+\textit{Formation control:} a swarm of drones fly to a goal while maintaining full connectivity with a limited communication radius. $\theta$ defines trajectories for each robot in the swarm, while $\phi$ defines an uncertain wind velocity field. Failure occurs when the second eigenvalue of the graph Laplacian is close to zero. This environment has small (5 agent, $\dim{\theta} = 30$, $\dim{\phi} = 1280$) and large (10 agent, $\dim{\theta} = 100$, $\dim{\phi} = 1280$) variants.
 %
-\textbf{Power grid dispatch:} electric generators must be scheduled to ensure that the network satisfies voltage and maximum power constraints in the event of transmission line outages. $\theta$ specifies generator setpoints and $\phi$ specifies line admittances; failures occur when any of the voltage or power constraints are violated. This environment has small (14-bus, $\dim{\theta} = 32$, $\dim{\phi} = 20$) and large (57-bus, $\dim{\theta} = 98$, $\dim{\phi} = 80$) versions.
+\textit{Power grid dispatch:} electric generators must be scheduled to ensure that the network satisfies voltage and maximum power constraints in the event of transmission line outages. $\theta$ specifies generator setpoints and $\phi$ specifies line admittances; failures occur when any of the voltage or power constraints are violated. This environment has small (14-bus, $\dim{\theta} = 32$, $\dim{\phi} = 20$) and large (57-bus, $\dim{\theta} = 98$, $\dim{\phi} = 80$) versions.
 % %
-% \textbf{GCAS:} a ground collision avoidance system (GCAS) must be designed to prevent a jet aircraft, modeled with aerodynamic effects and engine dynamics, from crashing into the ground. $\theta$ defines a control policy neural network ($\dim{\theta}\approx 1.8\times10^3$) and $\phi$ defines the initial conditions ($\dim{\phi} = 5$).
+% \textit{GCAS:} a ground collision avoidance system (GCAS) must be designed to prevent a jet aircraft, modeled with aerodynamic effects and engine dynamics, from crashing into the ground. $\theta$ defines a control policy neural network ($\dim{\theta}\approx 1.8\times10^3$) and $\phi$ defines the initial conditions ($\dim{\phi} = 5$).
 % %
-% \textbf{Pushing:} a robot manipulator must push an object out of the way to reach another object. Failure occurs if the object is knocked over while pushing. $\theta$ defines a planning policy network ($\dim{\theta} \approx 1.2\times10^3$) and $\phi$ defines the unknown inertial and frictional properties of the object being pushed, as well as measurement noises ($\dim{\phi} = 7$).
+% \textit{Pushing:} a robot manipulator must push an object out of the way to reach another object. Failure occurs if the object is knocked over while pushing. $\theta$ defines a planning policy network ($\dim{\theta} \approx 1.2\times10^3$) and $\phi$ defines the unknown inertial and frictional properties of the object being pushed, as well as measurement noises ($\dim{\phi} = 7$).
 
 \paragraph{Vision-in-the-loop benchmarks}
 
-\textbf{AV (highway):} An autonomous vehicle must overtake two other vehicles.
+\textit{AV (highway):} An autonomous vehicle must overtake two other vehicles.
 %
-\textbf{AV (intersection):} the autonomous vehicle must navigate an uncontrolled intersection with crossing traffic.
+\textit{AV (intersection):} the autonomous vehicle must navigate an uncontrolled intersection with crossing traffic.
 %
 In both AV tasks, the actions of the non-ego vehicles are uncertain, and the AV observes RGBd images from a front-facing camera as well as its own speed.
 %
-\textbf{Drone (static):} A drone must safely navigate through a cluttered environment in windy conditions. There is uncertainty in the wind speed and location of all obstacles. \textbf{Drone (dynamic):} the same but the obstacles move with uncertain velocities.
+\textit{Drone:} A drone must safely navigate through a cluttered environment in windy conditions. There is uncertainty in the wind speed and location of all obstacles.
+%  \textit{Drone (dynamic):} the same but the obstacles move with uncertain velocities.
 %
 Initial convolutional neural network (CNN) policies $\theta_0$ for drone and intersection environments were pretrained using behavior cloning, and CNN-based policies for the highway environment were pretrained using PPO~\cite{schulmanProximalPolicyOptimization2017}.
 %
-\textbf{Grasp (box/mug): } a robot must locate and grasp an object using a depth image of the scene. There is uncertainty in the location of the objects and in the location of a nearby distractor object. The grasp detector is trained with labels of ground-truth grasp affordances.
+\textit{Grasp (box/mug): } a robot must locate and grasp an object using a depth image of the scene. There is uncertainty in the location of the objects and in the location of a nearby distractor object. The grasp detector is trained with labels of ground-truth grasp affordances.
 
-The dimension of the failure space is 20 for the highway task, 30 for the intersection task, 12 for the static drone task, 22 for the dynamic drone task, and 4 for the grasping tasks. The dimension of the policy space is 64k for the highway and intersection tasks, 84k for the drone tasks, and 266k for the grasping tasks.
+The dimension of the failure space is 20 for the highway task, 30 for the intersection task, 12 for the drone task, and 4 for the grasping tasks. The dimension of the policy space is 64k for the highway and intersection tasks, 84k for the drone task, and 266k for the grasping tasks.
 
 \subsubsection{Implementation}
 
@@ -357,63 +364,84 @@ The non-vision benchmarks were all initialized with random $\theta_0$, and the v
 
 \subsubsection{Metrics}
 
-To measure the robustness of the optimized policies, we report the failure rate (FR) on a test set of 1,000 i.i.d. samples of $\phi$ from the prior $p_{\phi, 0}$. We also report the mean cost on this test set as well as the maximum cost on the vision-in-the-loop benchmarks (where cost is bounded by construction) and the 99\textsuperscript{th}-percentile cost for non-vision benchmarks (some of which have unbounded cost, making the 99\textsuperscript{th} percentile more representative). Costs are normalized by the maximum cost observed across any method. Finally, for each task, we report the time required for simulating a rollout both with and without reverse-mode differentiation.
+To measure the robustness of the optimized policies, we report the failure rate (FR) on a test set of 1,000 i.i.d. samples of $\phi$ from the prior $p_{\phi, 0}$. We also report the mean cost on this test set as well as the maximum cost on the vision-in-the-loop benchmarks (where cost is bounded by construction) and the 99\textsuperscript{th}-percentile cost for non-vision benchmarks (some of which have unbounded cost, making the 99\textsuperscript{th} percentile more representative). Costs are normalized by the maximum cost observed across any method. Finally, for each task, we report the time required to run a simulation both with and without reverse-mode differentiation.
 
-% TODO update below with T-RO material
+\subsection{Results}
 
-\textit{failure prediction}, entails finding exogenous parameters $y^*$ that, for some given $x$, lead to a high cost. To ensure that the predicted failures are plausible, it is important to balance maximizing cost with choosing values for $y^*$ with high prior likelihood. To achieve this balance, we define the metric of \textit{risk-adjusted cost}
-\begin{align}
-    J_r(x, y) = J \circ S(x, y) + \log p_{y, 0}(y)
-\end{align}
-where $\circ$ denotes function composition. Failure prediction is thus the problem of finding parameters $y^*$ that lead to a high risk-adjusted cost; moreover, since it is likely that $J_r$ will have multiple local minima with respect to $y$ (i.e. multiple likely failure modes), we wish to sample a set $\set{y^*_1, \ldots, y^*_{n_y}}$ of such high risk-adjusted cost failures. To generate this set, we convert the deterministic optimization problem $y^* = \argmax_y J_r(x, y)$ to the problem of sampling from the unnormalized probability distribution
-\begin{align}
-    y^* \sim p(y^* | x) \propto p_{y, 0}(y^*) e^{J \circ S(x, y^*)} \label{ch:corl:eq:prediction_distribution}
-\end{align}
+Fig.~\ref{ch:corl:fig:nonvision_results} shows the results from benchmark problems without vision in the loop, while Fig.~\ref{ch:corl:fig:vision_results} shows the results from problems with vision in the loop. For ease of comparison, each plot groups the gradient-free methods (\ltc{} and $R_0$) and the gradient-based methods (\gdr, \gda, and $R_1$). Since the initial parameters for the vision-in-the-loop benchmarks in Fig.~\ref{ch:corl:fig:vision_results} were trained using RL or behavior cloning (which do not require differentiable simulation), we group $\theta_0$ with the gradient-free results in Fig.~\ref{ch:corl:fig:vision_results}. We also compare the convergence rates of each method in Fig.~\ref{ch:corl:fig:convergence}. Table~\ref{ch:corl:tab:runtime} shows the time required for simulating with and without automatic differentiation.
 
-Similarly, we can reframe verification-guided design optimization, or \textit{failure mitigation}, as an inference problem. To do so, we assume that, just as there is a prior over exogenous factors $p_{0, y}$, there is also a prior over designs $p_{0, x}$ that reflects the constraints and the designer's prior beliefs about the design space (e.g. assigning zero prior probability to infeasible designs). Failure mitigation then seeks to find design parameters $x^*$ that both have high prior likelihood (thus respecting the designer's prior beliefs about the design space) and results in a low cost across a range of anticipated failure modes. We might frame this as an optimization problem, $x^* = \min_x \left[ \expectation_y J(x, y) + \log p_{x, 0}(x) \right]$ taking the expectation over the likely failure modes distribution~\eqref{ch:corl:eq:prediction_distribution}, but for the reasons discussed above it is more productive to frame this as a probabilistic sampling problem akin to the one used for failure prediction. To this end, we frame the problem of mitigating a set of failure modes $y^*_1, \ldots, y^*_{n_y}$ as the problem of sampling from the unnormalized distribution
-\begin{align}
-    x^* \sim p(x^* | y^*_1, \ldots, y^*_{n_y}) \propto p_{x, 0}(x^*) e^{-\sum_{i} J\circ S(x^*, y^*_i) / n_y} \label{ch:corl:eq:mitigation_distribution}
-\end{align}
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width=\linewidth]{images/corl/nonvision.png}
+    \caption{Comparison of our method (gradient-free and gradient-based variants $R_0$ and $R_1$, respectively) and baseline methods on benchmark problems without vision in the loop, showing failure rate, mean cost, and 99\textsuperscript{th} percentile cost on a test set of 1,000 randomly sampled $\phi$. The dashed gray lines separate gradient-free and gradient-based methods.}\label{ch:corl:fig:nonvision_results}
+\end{figure}
 
-Using this framework, we can replace the alternating min/max optimization presented in Chapter~\ref{section:local_methods} with a novel adversarial sampling algorithm that alternates between sampling a more robust design and sampling a more likely set of failure modes. This algorithm is presented in Algorithm~\ref{ch:corl:alg:smc}. It is important to note that this is not the first work to make the connection between MCMC sampling and verification, as~\cite{zhouRoCUSRobotController2021} uses gradient-free sampling to for failure mode prediction and~\cite{sinhaNeuralBridgeSampling2020} uses gradient-based sampling for failure probability analysis, but this is the first work (to our knowledge) that uses sampling to solve adversarial design optimization optimization problems.
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width=\linewidth]{images/corl/vision.png}
+    \caption{Comparison of our method (gradient-free and gradient-based variants $R_0$ and $R_1$, respectively) and baseline methods on benchmark problems with vision in the loop, showing failure rate, mean cost, and max cost on a test set of 1,000 randomly sampled $\phi$. The dashed gray lines separate gradient-free and gradient-based methods.}\label{ch:corl:fig:vision_results}
+\end{figure}
 
-Our algorithm (detailed in Algorithm~\ref{ch:corl:alg:smc}) proceeds in the style of a sequential Monte Carlo algorithm~\cite{chopinIntroductionSequentialMonte2020}. We begin by initializing $n_y$ potential failure modes and $n_x$ candidate designs sampled from their respective prior distributions. Then, in each of $K$ rounds, we first sample $n_x$ new candidate designs from distribution~\eqref{ch:corl:eq:mitigation_distribution} to mitigate the current set of predicted failure modes. We then select the design that performs best against all currently-predicted failure modes and sample $n_y$ new sets of exogenous parameters (each representing a potential failure mode) from distribution~\eqref{ch:corl:eq:prediction_distribution} to degrade the performance of the selected design. To sample from distributions~\eqref{ch:corl:eq:prediction_distribution} and~\eqref{ch:corl:eq:mitigation_distribution}, we use $n_x$ and $n_y$ parallel executions of the Metropolis-adjusted Langevin algorithm (MALA,~\cite{robertsLangevinDiffusionsMetropolisHastings2002}), a gradient-based MCMC sampling algorithm detailed in Algorithm~\ref{ch:corl:alg:mala}. In order to handle potential multimodality in the design and failure space, we include optional tempering to interpolate between the prior and target distributions, following~\cite{chopinIntroductionSequentialMonte2020}.
+\begin{figure}[tb]
+    \centering
+    \begin{subfigure}[t]{\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/corl/nonvision_convergence.png}
+        \caption{Non-vision benchmarks}\label{ch:corl:fig:convergence:nonvision}
+    \end{subfigure}
+    \begin{subfigure}[t]{\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/corl/vision_convergence.png}
+        \caption{Vision-in-the-loop benchmarks}\label{ch:corl:fig:convergence:vision}
+    \end{subfigure}
+    \caption{Convergence rates of our method and baselines on tasks with (top) and without (bottom) vision in the loop.}\label{ch:corl:fig:convergence}
+\end{figure}
 
-% \begin{algorithm}
-%     \caption{Failure prediction and mitigation using gradient-based sampling\label{ch:corl:alg:smc}}
-%     \DontPrintSemicolon
-%     \KwInput{Design and failure population sizes $n_x$, $n_y$; rounds $K$; substeps $M$; stepsize $\tau$; tempering schedule $\lambda_1, \ldots, \lambda_K$.}
-%     \KwOutput{Robust design $x^*$ and a set of failures $\set{y_1^*, \ldots, y_{n_y}^*}$ with high risk-adjusted cost.}
-%     Initialize candidate designs $[x]_0 = \set{x_1, \ldots, x_{n_x}}_0$ sampled from $p_{x, 0}(x)$\;
-%     Initialize candidate failures $[y]_0 = \set{y_1, \ldots, y_{n_y}}_0$ sampled from $p_{y, 0}(y)$\;
-%     \For{$i = 1, \ldots, K$}
-%     {
-%         $p_{x, i}(x) := p_{x, 0}(x)e^{-\lambda_k / n_y \sum_{y \in [y]_{i-1}} J\circ S(x, y)}$ \Comment{Update designs using predicted failures}\;
-%         $[x]_i \gets \text{MALA}([x]_{i-1}, M, \tau, p_{x, i})$\;
-%         $p_{y, i}(y) := p_{y, 0}(y)e^{\lambda_k\min_{x \in [x]_{i-1}} J\circ S(x, y)}$ \Comment{Update failure predictions for new best design}\;
-%         $[y]_i \gets \text{MALA}([y]_{i-1}, K, \tau, p_{y, i})$\;
-%     }
-%     $x^* \gets \argmax_{x \in [x]_{N}} p_{x, i}(x)$ \Comment{Choose best design}\;
-%     \KwRet{$x^*$, $[y]_K$}
-% \end{algorithm}
+Fig.~\ref{ch:corl:fig:repairs} shows examples of failure cases and repaired policies generated using $R_1$ on three vision-in-the-loop tasks: AV (highway), AV (intersection), and drone. The left of Fig.~\ref{ch:corl:fig:repairs} shows the initial policy $\theta_0$ and failure modes discovered using our method (sampling $\phi$ while holding $\theta_0$ fixed), while the right shows the repaired policy and updated challenging counterexamples. Since the distribution of failure modes shifts as we repair the policy, we continuously re-sample the failure modes to be relevant to the updated policy. In all cases, we see that the repaired policy found using our method experiences fewer failures, despite the updated adversarial failure modes. In certain cases, the repaired policy exhibits a qualitatively different behavior; for example, in the vision-in-the-loop highway control task, the repaired policy is less aggressive than the original policy, avoiding the risky overtake maneuver (top row of Fig.~\ref{ch:corl:fig:repairs}).
 
-Before moving on to our experimental results, we must discuss a few practical and theoretical aspects of Algorithm~\ref{ch:corl:alg:smc}. On a theoretical level, the use of MALA (or any MCMC algorithm) to sample from a distribution is sound so long as the resulting Markov chain is ergodic and satisfies detailed balance~\cite{aiama}. The use of Gaussian noise ensures ergodicity (since there is non-zero probability of transitioning between any two feasible states), while the Metropolis-Hastings accept/reject step in Line~\ref{ch:corl:alg:mala:mh} of Algorithm~\ref{ch:corl:alg:mala} enforces detailed balance. Unfortunately, there can be a large practical gap between the asymptotic guarantees provided by these conditions and practically acceptable performance.
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{images/corl/repairs.png}
+    \caption{Examples of failure cases (left) and repaired policies (right) generated using our method. Failed trajectories are shown in red.}\label{ch:corl:fig:repairs}
+\end{figure}
 
-First, if the target distribution is multimodal and the modes are well-separated, then MCMC algorithms may be slow to move between modes and will yield a biased sampling distribution with any finite number of steps. To mitigate this effect when the target distributions~\eqref{ch:corl:eq:prediction_distribution} and~\eqref{ch:corl:eq:mitigation_distribution} are highly multimodal, we include a tempering schedule $0 \leq \lambda_1 \leq \ldots \leq \lambda_K \leq 1$ to interpolate between the prior and target distributions and run multiple MALA instances in parallel from different initial conditions. We find empirically that tempering is not always needed, but we include it for completeness.
+\begin{table}
+    \caption{Time required for simulating a rollout with and without autodiff (AD) for each task (in seconds). Average and standard deviation (subscript) reported across 100 trials on AMD Ryzen Threadripper 3990X 64-Core Processor (non-vision tasks) and an NVIDIA RTX A4000 (vision-in-the-loop tasks).}
+    \label{ch:corl:tab:runtime}
+    \centering
+    \scriptsize
+    \begin{tabular}{rcccccc}
+        \toprule
+        \multicolumn{1}{l}{} & \multicolumn{6}{c}{Non-vision tasks}                                                                                                                       \\
+        \cmidrule(r){2-7}
+                             & Power (14)                             & Power (57)         & Formation (5)     & Formation (10)               & Search (3v5)        & Search (12v20)      \\
+        \midrule
+        w/o AD               & $0.00122_{0.00413}$                    & $0.0107_{0.00893}$ & $0.0326_{0.0173}$ & $0.628_{0.296}$              & $0.00147_{0.00461}$ & $0.00461_{0.00747}$ \\
+        w/ AD                & $0.00165_{0.00488}$                    & $0.0136_{0.0111}$  & $0.0543_{0.0212}$ & $0.714_{0.306}$              & $0.00358_{0.00704}$ & $0.0107_{0.00851}$  \\
+        \midrule
+        \multicolumn{1}{l}{} & \multicolumn{6}{c}{Vision-in-the-loop}                                                                                                                     \\
+        \cmidrule(r){2-7}
+                             & AV (hw.)                               & AV (int.)          & Drone             & Grasp (all)                  &                     &                     \\
+        \midrule
+        w/o AD               & $0.70_{0.003}$                         & $2.22_{0.01}$      & $0.39_{0.002}$    & $0.0045_{5.1\times 10^{-5}}$ &                                           \\
+        w/ AD                & $1.72_{0.003}$                         & $6.65_{0.14}$      & $1.77_{0.06}$     & $0.0049_{3.8\times 10^{-5}}$ &                                           \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
-The second potential practical challenge arises from the continuity and differentiability (or lack thereof) of the simulator and cost function $J \circ S$. Although MALA remains sound so long as the target distribution is continuously differentiable almost everywhere (i.e. discontinuous or non-differentiable on a set of measure zero), in practice performance may suffer when the target distribution has large discontinuities (it may take an unacceptably long time to accept a move across a discontinuity). As with the problems caused by multimodality, this issues can also be mitigated using of tempering.
+\subsection{Discussion}
 
-The final practical consideration is that although the stochasticity in our sampling-based approach can help us explore the design and failure spaces, we incur a degree of sub-optimality as a result. To reduce this sub-optimality, it is possible to ``quench'' the solution provided by our method by turning off the stochasticity on the last few rounds and executing simple gradient descent (e.g. using MALA for the first 90 rounds and then gradient descent on the last 10 rounds). In practice, we find that quenching can noticeably improve the final cost without compromising the diversity of predicted failure modes.
+In our results on problems without vision in the loop (Fig.~\ref{ch:corl:fig:nonvision_results}), we see several high-level trends. First, we see that gradient-based techniques (\gdr, \gda, and $R_1$) achieve lower failure rates, mean cost, and 99\textsuperscript{th} percentile costs relative to gradient-free methods (\ltc{} and $R_0$) on the test set, likely because gradient information helps the former methods explore the high-dimensional search space (as seen in the faster convergence of gradient-based methods in Fig.~\ref{ch:corl:fig:convergence:nonvision}). Moreover, we find that our methods ($R_0$ and $R_1$) outperform other methods within each of their respective categories; i.e. $R_0$ yields repaired solutions with lower costs and failure rates than \ltc, and $R_1$ likewise outperforms \gdr{} and \gda{}.
 
-% Motivation: how to close the design-verification feedback loop.
+We see a slightly different pattern in our results for problems with vision in the loop. On these problems, we find that existing gradient-based methods like \gda{} do not achieve lower failure rates than gradient-free methods like \ltc{}, possibly due to poor gradient quality from the differentiable renderer (where occlusions can lead to large variance in the automatically-derived gradients). In contrast, both variants of our method achieve low failure rates for repaired policies in the vision-in-the-loop tasks, and $R_1$ in particular is able to achieve better performance on some tasks because the Metropolis-Hastings adjustment on line~\ref{ch:corl:alg:mala:mh} of Algorithm~\ref{ch:corl:alg:mala} allows it to reject large steps caused by poorly conditioned gradients.
 
-% Convert min-max optimization from previous section to inference problem.
+\section{Case studies}\label{ch:corl:case_studies}
 
-% Introduce sequential MCMC algorithm for solving this problem.
+In this next section, we present three case studies to illustrate the practical use of our method. We first demonstrate how RADIUM can be used to solve a challenging optimization problem arising in the control of electrical power systems. We then provide two case studies showing how RADIUM can be applied to robotics problems and transferred to hardware.  %  TODO one case study for draft for committee
 
-\subsubsection{Case study: robust generation dispatch for secure power networks}
+\subsection{Robust generation dispatch for secure power networks}
 
-To see this approach in practice, consider the motivating example of controlling an electric power transmission network subject to failures in transmission lines. Two simple networks (the IEEE 14- and 57-node test system) are shown in Fig.~\ref{ch:corl:fig:networks}. The goal in this problem is to find control inputs (power injection and voltage at each generator, and power demand at each load) that ensure that the voltage seen by each load is stable, even in the event of transmission outages (which we model using a bimodal distribution for the admittance of each line). The simulator models the AC power flow through this network, and the cost function penalizes excessively high or low voltages or any violation of rated generator capacities. More details on this motivating example is provided in the appendix.
+For our first case study, we consider the problem of controlling an electric power grid subject to failures in transmission lines. Two simple networks (the IEEE 14- and 57-node test system) are shown in Fig.~\ref{ch:corl:fig:networks}. The goal in this problem is to find control inputs (power injection and voltage at each generator, and power demand at each load) that ensure that the voltage seen by each load is stable, even in the event of transmission outages (which we model using a bimodal distribution for the admittance of each line). The simulator models the AC power flow through this network, and the cost function penalizes excessively high or low voltages or any violation of rated generator capacities. More details on this motivating example is provided in the appendix.
 
 Given a transmission network, the so-called \textit{security-constrained optimal power flow problem} (or SCOPF~\cite{capitanescuStateoftheartChallengesFuture2011}) is the problem of scheduling generator setpoints and power demand from loads to minimize the economic cost of generation and ensure that the network operates safely (satisfying voltage and maximum power constraints) in the event of transmission line outages. The design parameters $x = (P_g, |V|_g, P_l, Q_l)$ include the real power injection $P_g$ and AC voltage amplitude $|V|_g$ at each generator in the network and the real and reactive power draws at each load $P_l, Q_l$; all of these parameters are subject to minimum and maximum bounds that we model using a uniform prior distribution $p_{x, 0}$. The exogenous parameters are the state $y_i \in \R$ of each transmission line in the network; the admittance of each line is given by $\sigma(y_i) Y_{i, nom}$ where $\sigma$ is the sigmoid function and $Y_{i, nom}$ is the nominal admittance of the line. The prior distribution $p_{y, 0}$ is an independent Gaussian for each line with a mean chosen so that $\int_{-\infty}^0 p_{y_i, 0}(y_i) dy_i$ is equal to the likelihood of any individual line failing (e.g. as specified by the manufacturer; we use $0.05$ in our experiments). The simulator $S$ solves the nonlinear AC power flow equations~\cite{cainHistoryOptimalPower2012} to determine the state of the network, and the cost function combines the economic cost of generation $c_g$ (a quadratic function of $P_g, P_l, Q_l$) with the total violation of constraints on generator capacities, load requirements, and voltage amplitudes:
 \begin{align}
@@ -439,81 +467,91 @@ Efficient solutions to SCOPF are the subject of active research~\cite{capitanesc
     \label{ch:corl:fig:networks}
 \end{figure}
 
-We can compare our approach quantitatively with the following baselines. \textbf{GD}: solving the adversarial optimization problem $\min_x \max_y J_r(x, y)$ by alternating between optimizing a population of $n_x$ designs and $n_y$ failure modes using local gradient descent. GD is analogous to the methods proposed in~\cite{dontiAdversariallyRobustLearning2021} and in the work in the previous chapter~\cite{dawsonRobustCounterexampleguidedOptimization2022b}, modified to provide a fair comparison by using populations of design and exogenous parameters rather than single examples (we intend this baseline to also be representative of a broad class of gradient-based falsifiers~\cite{xuAdversarialAttacksDefenses2020}). \textbf{RMH}: implements Alg.~\ref{ch:corl:alg:smc} using gradient-free Metropolis-Hastings MCMC with a Gaussian kernel instead of MALA. This baseline represents the straightforward extension of gradient-free failure prediction techniques like ROCUS~\cite{zhouRoCUSRobotController2021} to solve the mitigation problem as well. In addition to these benchmarks, we also include \textbf{GD-NoAdv} to demonstrate what happens when we run \textbf{GD} without updating the exogenous parameters. GD-NoAdv does not represent the state of the art but instead illustrates the benefit of intelligently predicting failure modes rather than relying on vanilla domain randomization.
+A high-level comparison of RADIUM with existing methods is shown in Figs.~\ref{ch:corl:fig:nonvision_results} and~\ref{ch:corl:fig:convergence:nonvision}; in this section, we provide a more detailed comparison between RADIUM and prior optimization-based methods that are the state-of-the-art for this SCOPF problem~\cite{dontiAdversariallyRobustLearning2021} (the comparison with \ltc{} is not shown in thi section, since it is not able to solve the SCOPF problem).
 
-We implement our method and all baselines in Python using the JAX framework for automatic differentiation and just-in-time compilation. Experiments were run on a laptop with 8 GB of RAM, an 8-core Intel i7-865U CPU running at \SI{1.8}{GHz}, and no GPU. To ensure a fair comparison, all techniques are run with the same population sizes $n_x = n_y = 10$ and total sample budget $KM(n_x + n_y) = 2\times 10^4$ ($K = 100$, $M = 10$); this sample budget was chosen to be large enough that all methods converged. After manual tuning, we found that a step size of $\tau = 10^{-2}$ was appropriate for the exogenous parameters, but $\tau = 10^{-6}$ was required for the design parameters to ensure stability of gradient-based methods. We found that tempering was not required for this problem ($\lambda_i = 1$). For our method, we quench during the final 10 rounds.
-
-We will first compare these methods based on the quality of the solutions they produce, and then on the the speed with which they converge to an optimized design.
-
-\paragraph{Solution quality} To compare the quality of these methods' solutions, we use each method to optimize $n_x = 10$ candidate designs and predict $n_y=10$ failure modes with high risk-adjusted cost. We then select the design that achieves the highest likelihood according to Eq.~\eqref{ch:corl:eq:mitigation_distribution}, then use one additional round to sample new failure modes that attack the chosen design. The maximum cost across these final predicted failure modes provides a measure of each algorithm's confidence in its solution. We then compare the performance on these predicted failure modes to the maximum cost observed on a test set of $10^6$ exogenous parameters sampled randomly from the prior $p_{y, 0}$. Fig.~\ref{ch:corl:fig:14_bus_comparison} (top) shows the predicted and observed costs for each method on the IEEE 14-bus test case. The prediction-and-mitigation process took \SI{30.5}{s} for GD-NoAdv, \SI{61.5}{s} for GD, \SI{111.5}{s} for RMH, and \SI{141.7}{s} for our method (including the cost of JAX just-in-time compilation).
+\paragraph{Solution quality} To compare the quality of these methods' solutions, we use each method to optimize $10$ candidate designs and predict $10$ failure modes using Algorithm~\ref{ch:corl:alg:adv_diffusion}. We then select the design that achieves the highest likelihood according to Eq.~\eqref{ch:corl:eq:repair_logprob_tempered}, then use one additional round to sample new failure modes that attack the chosen design. The maximum cost across these final predicted failure modes provides a measure of each algorithm's confidence in its solution. We then compare the performance on these predicted failure modes to the maximum cost observed on a test set of $10^6$ exogenous parameters sampled randomly from the prior $p_{y, 0}$. Fig.~\ref{ch:corl:fig:scopf_comparison:14_bus} shows the predicted and observed costs for each method on the IEEE 14-bus test case. The prediction-and-mitigation process took \SI{30.5}{s} for \gdr{}, \SI{61.5}{s} for \gda{}, \SI{111.5}{s} for $R_0$, and \SI{141.7}{s} for $R_1$ (including the cost of JAX just-in-time compilation).
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=0.45\linewidth]{images/global_methods/14_bus_comparison.png}
-    \includegraphics[width=0.45\linewidth]{images/global_methods/57_bus_comparison.png}
-    \caption{Comparison of our method with baselines for failure prediction and mitigation on a 14-bus (top) and 57-bus (bottom) power transmission network. Red markers show the maximum, mean, and minimum-cost failure modes predicted by each method after optimizing the design, while the box plot shows the distribution of costs on a test set of $10^6$ random failures. Our method not only successfully predicts failure modes that match the range of the empirical distribution, but it also finds a low-cost solution that is more robust than those found by other methods.}
-    \label{ch:corl:fig:14_bus_comparison}
+    \begin{subfigure}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/global_methods/14_bus_comparison.png}
+        \caption{14-bus network}\label{ch:corl:fig:scopf_comparison:14_bus}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/global_methods/57_bus_comparison.png}
+        \caption{57-bus network}\label{ch:corl:fig:scopf_comparison:57_bus}
+    \end{subfigure}
+    \caption{Comparison of our method with baselines for failure prediction and mitigation on power transmission networks. Red markers show the maximum, mean, and minimum-cost failure modes predicted by each method after optimizing the design, while the box plot shows the distribution of costs on a test set of $10^6$ random failures.}
+    \label{ch:corl:fig:scopf_comparison}
 \end{figure}
 
-We can assess these methods in two ways: by the quality of the optimized design and by the quality of the predicted failure cases. The two optimization-based methods, GD and GD-NoAdv, find solutions with the lowest best-case cost, but their solutions are not robust. Not only do these methods find solutions that are susceptible to a heavy tail of failures, but they are overconfident and fail to predict those failures (instead predicting that all 10 candidate failures will be successfully mitigated). In contrast, RMH is not overconfident (it successfully predicts failure modes that match the range of the empirical failure distribution), but it finds a solution that is 10 times costlier than that found by our method. Only our proposed method is able to find a robust, low-cost solution without being overconfident.
+We can assess these methods in two ways: by the quality of the optimized design and by the quality of the predicted failure cases. The two optimization-based methods, \gda{} and \gdr{}, find solutions with the lowest best-case cost, but their solutions are not robust. Not only do these methods find solutions that are susceptible to a heavy tail of failures, but they are overconfident and fail to predict those failures (instead predicting that all 10 candidate failures will be successfully mitigated). In contrast, $R_0$ is not overconfident (it successfully predicts failure modes that match the range of the empirical failure distribution), but it finds a solution that is 10 times costlier than those found by $R_1$. Only $R_1$ is able to find a robust, low-cost solution without being overconfident.
 
-Once we have a robust design optimized using our method, we can examine the predicted failure modes to understand the remaining ways in which our design might fail. Of the 10 predicted failure modes, 4 include attacks on the transmission line connecting the generator at bus 7 to the rest of the network (this was the most commonly attacked line). Interestingly, of these 4 attacks, only one (shown in Fig.~\ref{ch:corl:fig:predicted_failure_modes}) is able to cause a violation of the voltage stability constraints. It is only by fully disconnecting the generator at bus 7 (dotted red line) and partially impairing the line between buses 1 and 4 (solid red; $15\%$ impairment) that we see the voltage drop at several buses (shown in orange). This information about potential failure modes can be very useful to system designers; in this example, the designer may choose to focus monitoring and infrastructure hardening efforts on the two affected lines.
+Once we have a robust design optimized using our method, we can examine the predicted failure modes to understand the remaining ways in which our design might fail. Of the 10 failure modes predicted by $R_1$, 4 include attacks on the transmission line connecting the generator at bus 7 to the rest of the network (this was the most commonly attacked line). Interestingly, of these 4 attacks, only one (shown in Fig.~\ref{ch:corl:fig:predicted_failure_modes}) is able to cause a violation of the voltage stability constraints. It is only by fully disconnecting the generator at bus 7 (dotted red line) and partially impairing the line between buses 1 and 4 (solid red; $15\%$ impairment) that we see the voltage drop at several buses (shown in orange). This information about potential failure modes can be very useful to system designers; in this example, the designer may choose to focus monitoring and infrastructure hardening efforts on the two affected lines.
 
 \begin{figure}[tb]
     \centering
     \includegraphics[width=0.4\linewidth]{images/global_methods/predicted_failure_modes.png}
-    \caption{The only predicted failure modes (of 10 candidates) that causes violation of voltage constraints on the 14-bus transmission network, using the optimized design found using our method. Fully disconnecting the generator at bus 7 (dotted red line) is not enough; other predicted failures include this outage but do not cause a constraint violation. It is only by additionally impairing the line between buses 1 and 4 that the voltage constraint is violated at the buses shown in orange.}
+    \caption{The only predicted failure modes (of 10 candidates) that causes violation of voltage constraints on the 14-bus transmission network, using the optimized design found using $R_1$. Fully disconnecting the generator at bus 7 (dotted red line) is not enough; other predicted failures include this outage but do not cause a constraint violation. It is only by additionally impairing the line between buses 1 and 4 that the voltage constraint is violated at the buses shown in orange.}
     \label{ch:corl:fig:predicted_failure_modes}
 \end{figure}
 
-To understand the scalability of our approach, we repeat this experiment on a larger 57-bus network with 80 transmission lines. All hyperparameters were the same except for the step size for exogenous parameters, which was reduced to $10^{-3}$. The results are shown in the bottom panel of Fig.~\ref{ch:corl:fig:14_bus_comparison}; we see that our approach continues to not only find a robust solutions (with a relatively light tail of failures) but also accurately predicts the range of possible failure modes (as opposed to RMH, which does not explore the full failure space in this case). Running GD-NoAdv on this example took \SI{406.2}{s}, GD took \SI{803.4}{s}, RMH took \SI{1002.3}{s}, and our method took \SI{1438.5}{s}.
+To understand the scalability of our approach, we repeat this experiment on a larger 57-bus network with 80 transmission lines. All hyperparameters were the same except for the step size for exogenous parameters, which was reduced to $10^{-3}$. The results are shown in the bottom panel of Fig.~\ref{ch:corl:fig:scopf_comparison:14_bus}; we see that $R_1$ continues to not only find a robust solutions (with a relatively light tail of failures) but also accurately predicts the range of possible failure modes ($R_0$ does not explore the full failure space in this case). Running \gdr{} on this example takes \SI{406.2}{s}, \gda{} takes \SI{803.4}{s}, $R_0$ takes \SI{1002.3}{s}, and $R_1$ takes \SI{1438.5}{s}.
 
-\paragraph{Convergence rate} From comparing solution quality, there is a clear separation between the sampling- and optimization-based methods, with sampling able to find more robust designs and more accurately cover the range of possible failures (although our gradient-based approach finds higher-quality solutions in both the 14- and 57-node test cases). As a result, a natural question is how these two sampling-based methods compare in how quickly they converge.
+\paragraph{Convergence rate} From comparing solution quality, there is a clear separation between the sampling- and optimization-based methods, with sampling able to find more robust designs and more accurately cover the range of possible failures (although gradient-based sampling finds higher-quality solutions than gradient-free sampling in both cases). A natural next question is how quickly these methods converge to a solution.
 
-To measure the relative convergence rate of RMH and our gradient-based method, we measure the average cost $J$ in each round across all candidate designs $[x]_i$ on a test set of 100 exogenous parameters sampled randomly from the prior distribution. The convergence of this test-set performance as a function of the number of sampling rounds is shown in Fig.~\ref{ch:corl:fig:training_curves} for both the 14- and 57-bus networks. These results show that our method converges much more quickly than gradient-free RMH, suggesting that the use of automatic differentiation provides a clear advantage.
+To measure the relative convergence rate of \gdr{}, \gda{}, $R_0$, and $R_1$, we measure the 99\textsuperscript{th} percentile cost $J$ of the candidate design $[x]_i$ with the highest log likelihood~\eqref{ch:corl:eq:repair_logprob_tempered} on a test set of 1000 exogenous parameters sampled randomly from the prior. The convergence of this test-set performance as a function of the number of sampling rounds is shown in Fig.~\ref{ch:corl:fig:power_training_curves} for both the 14- and 57-bus networks.
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=0.45\linewidth]{images/global_methods/14_bus_training_curves.png}
-    \includegraphics[width=0.45\linewidth]{images/global_methods/57_bus_training_curves.png}
-    \caption{Comparison of convergence rates of our method and a gradient-free sampling baseline on 14- (top) and 57-bus (bottom) power networks, showing average cost of 10 candidate designs on a test set of 100 random exogenous parameters. Our gradient-based method converges significantly faster than gradient-free RMH. The gradual increase in cost after convergence is likely due to distribution shift between the predicted failure modes and the prior distribution.}
-    \label{ch:corl:fig:training_curves}
+    \includegraphics[width=\linewidth]{images/corl/power_convergence.png}
+    \caption{Comparison of convergence rates of different methods on 14- (left) and 57-bus (right) power networks, showing the 99\textsuperscript{th} percentile cost of the best design after each round. The {\color{orange} $\blacktriangledown$} symbol indicates the start of quenching for $R_1$.}
+    \label{ch:corl:fig:power_training_curves}
 \end{figure}
 
-\subsubsection{Case study: Vision-based control}
+There are two important conclusions to be drawn from comparing the convergence rates in Fig.~\ref{ch:corl:fig:power_training_curves}. The first is that the gradient-based methods, \gdr{}, \gda{}, and $R_1$, converge faster than gradient-free $R_0$. Although the SCOPF problem (as well as ACOPF, the non-adversarial version) are non-convex optimization problems, there are known convex relaxations~\cite{huangReviewConvexificationMethods2019}, and gradient descent-based methods have been shown to work well for finding local optima~\cite{dontiAdversariallyRobustLearning2021,dontiDC3LearningMethod2021}, so the good performance of gradient-based methods is not surprising.
 
-We have also applied our approach to problems involving visual feedback, implementing a differentiable rendering engine in JAX and applying the adversarial sampling approach from Algorithm~\ref{ch:corl:alg:smc}. We define a range of vision-based control tasks, from autonomous vehicle control to grasp keypoint prediction, as shown in Fig.~\ref{ch:corl:fig:vision_scenarios}. For each of these scenarios, a policy was pretrained using a traditional method (either PPO or behavior cloning), and then we apply our method to identify and repair failure modes.
+The second important conclusion from Fig.~\ref{ch:corl:fig:power_training_curves} is the importance of quenching $R_1$ on this problem (i.e. disabling the stochastic part of the sampling algorithm and taking a few gradient descent steps during the final rounds). Prior to quenching, $R_1$ converges to a solution with similar 99\textsubscript{th} percentile cost as \gdr{} and \gda{}, but after quenching (in the last 20 rounds), $R_1$ is able to find a solution with a much lower cost. This is likely because of the constraints on $P$, $Q$, and $|V|$ in the SCOPF problem; sampling based methods may struggle to exactly satisfy constraints like these, as $MALA$ and $RMH$ are constantly injecting noise into the solution, and so running a few steps of gradient descent on $\theta$ towards the end of the repair process likely helps drive constraint violations to zero by converging to the local minima nearest to the solutions explored by the sampling process. The fact that $R_1$ converges to a lower-cost solution than \gdr{} or \gda{}, despite running the same gradient-based optimization process during the quenching phase, suggests that the improved exploration of designs and failures due to sampling provides an advantage over pure optimization-based methods on this problem.
 
-Example failures for the drone and autonomous vehicle scenarios are shown on the left in Fig.~\ref{ch:corl:fig:repairs}, while the repaired policy is shown on the right for each case. We can see that some of the pretrained policies, such as for autonomous driving on a highway, are overly aggressive and prone to failures, while the repaired policy is much safer.
+\subsection{Case study on multi-agent path planning}
 
-\begin{figure}
+We return to the search problem used as a baseline in Section~\ref{ch:corl:experiments}, where a team of seeker robots must cover a region to detect a set of hiders. The simulation environment includes $n_{seek}$ seeker robots and $n_{hide}$ hider robots. Each robot is modeled using single-integrator dynamics and tracks a pre-planned trajectory using a proportional controller with saturation at a maximum speed chosen to match that of the Robotarium platform~\cite{wilsonRobotariumGloballyImpactful2020}. The trajectory $\vec{x}_i(t)$ for each robot is represented as a Bezier curve with 5 control points $\vec{x}_{i, j}$,
+\begin{align*}
+    \vec{x}_i(t) = \sum_{j=0}^4 \binom{4}{j}(1-t)^{4-j}t^j \vec{x}_{i, j}
+\end{align*}
+
+The design parameters are the 2D position of the control points for the trajectories of the seeker robots, while the exogenous parameters are the control points for the hider robots. The prior distribution for each set of parameters is uniform over the width and height of the Robotarium arena ($\SI{3.2}{m}\times\SI{2}{m}$).
+
+We simulate the behavior of the robots tracking these trajectories for \SI{100}{s} with a discrete time step of \SI{0.1}{s} (including the effects of velocity saturation that are observed on the physical platform), and the cost function is
+\begin{align*}
+    J = \sum_{i=1}^{n_{hide}}\pn{\mathop{\widetilde{\min}}_{t = t_0, \ldots, t_{n}} \pn{\mathop{\widetilde{\min}}_{j=1, \ldots, n_{seek}}\norm{\vec{p}_{hide, i}(t) - \vec{p}_{seek, j}(t)} - r}}
+\end{align*}
+%
+where $r$ is the sensing range of the seekers (\SI{0.5}{m} for the $n_{seek} = 2$ case and \SI{0.25}{m} for the $n_{seek}=3$ case); $\widetilde{\min}(\circ) = -\frac{1}{b}\text{logsumexp}(-b\ \circ)$ is a smooth relaxation of the element-wise minimum function where $b$ controls the degree of smoothing ($b=100$ in our experiments); $t_0, \ldots, t_{n}$ are the discrete time steps of the simulation; and $\vec{p}_{hide, i}(t)$ and $\vec{p}_{seek, j}(t)$ are the $(x, y)$ position of the $i$-th hider and $j$-th seeker robot at time $t$, respectively. In plain language, this cost is equal to the sum of the minimum distance observed between each hider and the closest seeker over the course of the simulation, adjusted for each seeker's search radius.
+
+We deploy the optimized hider and seeker trajectories in hardware using the Robotarium multi-robot platform~\cite{wilsonRobotariumGloballyImpactful2020} (we use 3 seekers and 5 hiders, since we had difficulty testing with more agents in the limited space). We first hold the search pattern (design parameters) constant and optimize evasion patterns against this fixed search pattern, yielding the results shown on the left in Fig.~\ref{fig:hw_experimental_results} where the hiders easily evade the seekers. We then optimize the search patterns using our approach (with $K=100$ rounds and $M=10$ substeps per round, taking \SI{41}{s}), yielding the results on the left where the hiders are not able to evade the seekers. Trajectories for the hiders and seekers were planned offline and then tracked online using linear trajectory-tracking controllers.
+
+\begin{figure}[tb]
     \centering
-    \includegraphics[width=\linewidth]{images/global_methods/all_scenarios.png}
-    \caption{Environments for drone navigation, AV control, and household object manipulation. Inset: a robot's-eye-view of each scene rendered using our differentiable renderer.}\label{ch:corl:fig:vision_scenarios}
+    \includegraphics[width=\linewidth]{images/corl/hw_results.png}
+    \caption{(Left) HW results for search-evasion with 5 hiders and 3 seekers, showing an initial search pattern (seeker trajectories; blue) and predicted failure modes (hider trajectories; red). (Right) HW results for an optimized search pattern leaves fewer hiding places. The top row shows the predicted failure modes (i.e. hider trajectories), while the bottom row shows a snapshot from hardware executions of these trajectories.}
+    \label{fig:hw_experimental_results}
 \end{figure}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{images/global_methods/repairs.png}
-    \caption{Examples of failure cases (left) and repaired policies (right) generated using our method.}\label{ch:corl:fig:repairs}
-\end{figure}
+Although the gap between simulation and reality is not particularly large in this case, there are effects present in the hardware system that we did not model in our simulator (e.g. the collision-avoidance safety filter used by the Robotarium). Despite this small gap, this case study serves as a useful proof-of-concept for transferring optimized designs from simulation to hardware.
+%
+% In the next case study, we will demonstrate the transfer of failure modes and repaired designs in a much more challenging environment with vision in the loop.
 
-% Problem setup
+% \subsection{Case study on vision-in-the-loop control of a model racecar}
 
-% Research questions relevant to state of the art.
+% TODO
 
-% Results
+\section{Conclusion \& Limitations}
 
-% How do our results compare to the state of the art? - Highlight overconfidence of gradient-only methods and poor solution quality of gradient-free methods.
+In this chapter, we close several key gaps in the prior work on adversarial design optimization. In particular, we reframe the adversarial optimization problem studied in Chapter~\ref{ch:iros} as a inference problem solved by sampling from specially constructed pseudo-posterior distributions. This reformulation brings three key advantages. First, it allows us to use gradient-based sampling algorithms that are robust to high-variance or poorly conditioned gradients that would otherwise cause a gradient-based optimization algorithm to diverge. Second, our stochastic sampling-based methods is able to avoid local minima that cause gradient-based optimizers to get stuck. Finally, since our method focused on sampling a range of high-severity failures, rather than finding a single most-severe failure, we are able to find a much more diverse set of counterexamples than prior optimization-based methods. Ultimately, these diverse counterexamples allow us to optimize against a more challenging curriculum of failure modes, leading to more robust designs.
 
-\subsection{Discussion \& Limitations}
+We apply our approach to a range of robotics and cyberphysical control problems, demonstrating how the use of gradients from differentiable simulation and rendering can help accelerate convergence. However, we acknowledge that a differentiable simulation environment is not always available, and that substantial engineering effort can be required to develop such a simulator. Because of this difficulty, and because simulators of certain phenomena (e.g., contact~\cite{huDiffTaichiDifferentiableProgramming2019} and rendering with occlusion~\cite{zhaoPhysicsbasedDifferentiableRendering2020}) can yield inaccurate gradients if care is not taken, we build graceful degradation into our approach, providing a gradient-free version of our algorithm that can be used when gradients are not available. When gradient quality is poor, we find empirically that the acceptance rate of $R_1$ will fall to zero, which provides feedback to the user to either improve their differentiable simulator or switch to $R_0$ (which we find outperforms gradient-free baselines on the benchmark problems studied in this chapter).
 
-This chapter has presented the results of ongoing research demonstrating that:
-
-\begin{enumerate}
-    \item For problems with multiple local minima and poorly-conditioned gradients, an inference-based approach leads to more robust solution methods than an optimization-based approach.
-    \item Optimization-as-Inference problems can be solved using either gradient-based or gradient-free methods, but gradient-based methods (enabled by automatic differentiation) perform much better on higher dimensional problems.
-    \item The verification-guided design problem can be solved using a novel adversarial inference algorithm, a gradient-based version of which leads to faster convergence, better coverage of the failure space, and more robust designs.
-\end{enumerate}
-
-The results in this chapter, particularly regarding vision-based control, are preliminary; more work is needed to benchmark gradient-free and gradient-based inference methods against optimization methods on a range of robotics problems. In addition, although I have preliminary theoretical results that provide conditions under which gradient-based inference methods will work well (building on the results in~\cite{maSamplingCanBe2019}), more work is required to understand a) what features of a problem are required for this approach to work well (e.g. degree of smoothness, extent of discontinuity, etc.) and b) to develop runtime checks to determine whether a problem is well-suited for gradient-based inference.
+Although the RADIUM framework developed in this chapter closes a number of important technical gaps from previous chapters, there are several limitations that remain to be addressed. First, these methods rely on a manually-specified cost function to define failures. For some complex systems, it may be difficult to specify an appropriate cost function \textit{a priori}, and doing so may lead our method to focus only on those failures defined by the cost function, preventing the discovery of other undesirable behaviors. Second, RADIUM relies entirely on simulation for discovering failures and repairing designs; although we can transfer RADIUM's designs and predicted failures from simulation to hardware, there is no immediately obvious way to feed the results of hardware experiments back into RADIUM. In the next chapter, we introduce a method for data-driven failure analysis that allows us to close the loop between simulation and real-world data, while avoiding the need for a hand-specified cost function.

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="242.93938mm"
+   height="72.482437mm"
+   viewBox="0 0 242.93938 72.482438"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.1 (9b9bdc1480, 2023-11-25, custom)"
+   sodipodi:docname="calvi_results_overview.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.2077574"
+     inkscape:cx="296.00314"
+     inkscape:cy="209.06516"
+     inkscape:window-width="2560"
+     inkscape:window-height="1043"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-14.033945,-25.903775)">
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       id="rect1"
+       width="50.209797"
+       height="25.104898"
+       x="22.294542"
+       y="34.533195" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       id="rect1-5"
+       width="50.209797"
+       height="25.104898"
+       x="22.294542"
+       y="62.58395" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;line-height:1.1;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans';letter-spacing:0px;fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       x="26.012405"
+       y="48.458046"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         style="fill:#1a1924;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="26.012405"
+         y="48.458046">Nominal ground truth</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;line-height:1.1;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans';letter-spacing:0px;fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       x="26.012405"
+       y="74.916374"
+       id="text2"><tspan
+         sodipodi:role="line"
+         id="tspan2"
+         style="fill:#1a1924;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="26.012405"
+         y="74.916374">Failure ground truth</tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       id="rect2"
+       width="50.209797"
+       height="25.104898"
+       x="80.502876"
+       y="34.533195" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       id="rect3"
+       width="50.209797"
+       height="25.104898"
+       x="80.502876"
+       y="62.58395" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;line-height:1.1;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans';letter-spacing:0px;fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       x="82.633232"
+       y="48.458046"
+       id="text3"><tspan
+         sodipodi:role="line"
+         id="tspan3"
+         style="fill:#1a1924;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="82.633232"
+         y="48.458046">Nominal-only posterior</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;line-height:1.1;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans';letter-spacing:0px;fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       x="84.220734"
+       y="74.916374"
+       id="text4"><tspan
+         sodipodi:role="line"
+         id="tspan4"
+         style="fill:#1a1924;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="84.220734"
+         y="74.916374">Failure-only posterior</tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       id="rect4"
+       width="50.209797"
+       height="25.104898"
+       x="138.71121"
+       y="34.533195" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       id="rect5"
+       width="50.209797"
+       height="25.104898"
+       x="138.71121"
+       y="62.58395" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;line-height:1.1;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans';letter-spacing:0px;fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       x="142.42908"
+       y="48.458046"
+       id="text5"><tspan
+         sodipodi:role="line"
+         id="tspan5"
+         style="fill:#1a1924;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="142.42908"
+         y="48.458046">Nominal amortized</tspan><tspan
+         sodipodi:role="line"
+         style="fill:#1a1924;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="142.42908"
+         y="53.114708"
+         id="tspan9">posterior</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;line-height:1.1;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans';letter-spacing:0px;fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       x="142.42908"
+       y="74.916374"
+       id="text6"><tspan
+         sodipodi:role="line"
+         id="tspan6"
+         style="fill:#1a1924;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="142.42908"
+         y="74.916374">Failure amortized</tspan><tspan
+         sodipodi:role="line"
+         style="fill:#1a1924;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="142.42908"
+         y="79.573036"
+         id="tspan10">posterior</tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       id="rect6"
+       width="50.209797"
+       height="25.104898"
+       x="196.9196"
+       y="34.533195" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       id="rect7"
+       width="50.209797"
+       height="25.104898"
+       x="196.9196"
+       y="62.58395" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;line-height:1.1;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans';letter-spacing:0px;fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       x="200.63747"
+       y="48.458046"
+       id="text7"><tspan
+         sodipodi:role="line"
+         id="tspan7"
+         style="fill:#1a1924;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="200.63747"
+         y="48.458046">Nominal CalVI</tspan><tspan
+         sodipodi:role="line"
+         style="fill:#1a1924;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="200.63747"
+         y="53.114708"
+         id="tspan11">posterior</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;line-height:1.1;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans';letter-spacing:0px;fill:none;stroke:#000000;stroke-width:0.499999;stroke-opacity:1"
+       x="200.63747"
+       y="74.916374"
+       id="text8"><tspan
+         sodipodi:role="line"
+         id="tspan8"
+         style="fill:#1a1924;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="200.63747"
+         y="74.916374">Failure CalVI</tspan><tspan
+         sodipodi:role="line"
+         style="fill:#1a1924;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="200.63747"
+         y="79.573036"
+         id="tspan12">posterior</tspan></text>
+  </g>
+</svg>

@@ -1,0 +1,109 @@
+\chapter{Appendix to Chapter~\ref{ch:corl}}
+
+\section{Environment details}
+
+This section provides more details on the environments used as benchmark problems in Chapter~\ref{ch:corl}.
+
+\subsection{AC Power Flow Problem Definition}
+The design parameters $x = (P_g, |V|_g, P_l, Q_l)$ include the real power injection $P_g$ and AC voltage amplitude $|V|_g$ at each generator in the network and the real and reactive power draws at each load $P_l, Q_l$; all of these parameters are subject to minimum and maximum bounds that we model using a uniform prior distribution $p_{x, 0}$. The exogenous parameters are the state $y_i \in \R$ of each transmission line in the network; the admittance of each line is given by $\sigma(y_i) Y_{i, nom}$ where $\sigma$ is the sigmoid function and $Y_{i, nom}$ is the nominal admittance of the line. The prior distribution $p_{y, 0}$ is an independent Gaussian for each line with a mean chosen so that $\int_{-\infty}^0 p_{y_i, 0}(y_i) dy_i$ is equal to the likelihood of any individual line failing (e.g. as specified by the manufacturer; we use $0.05$ in our experiments). The simulator $S$ solves the nonlinear AC power flow equations~\cite{cainHistoryOptimalPower2012} to determine the AC voltage amplitudes and phase angles $(|V|, \theta)$ and the net real and reactive power injections $(P, Q)$ at each bus (the behavior $\xi$ is the concatenation of these values). We follow the 2-step method described in~\cite{dontiDC3LearningMethod2021} where we first solve for the voltage and voltage angles at all buses by solving a system of nonlinear equations and then compute the reactive power injection from each generator and the power injection from the slack bus (representing the connection to the rest of the grid). The cost function $J$ is a combination of the generation cost implied by $P_g$ and a hinge loss penalty for violating constraints on acceptable voltages at each bus or exceeding the power generation limits of any generator, as specified in Eq.~\ref{eq:scopf_cost}. The data for each test case (minimum and maximum voltage and power limits, demand characteristics, generator costs, etc.) are loaded from the data files included in the MATPOWER software~\cite{zimmermanMATPOWERSteadyStateOperations2011}.
+
+\paragraph{Cost} The cost function combines the economic cost of generation $c_g$ (a quadratic function of $P_g, P_l, Q_l$) with the total violation of constraints on generator capacities, load requirements, and voltage amplitudes:
+\begin{align}
+    J = & c_g + v(P_g, P_{g, min}, P_{g, max}) + v(Q_g, Q_{g, min}, Q_{g, max}) \\
+        & + v(P_l, P_{l, min}, P_{l, max}) + v(Q_l, Q_{l, min}, Q_{l, max})     \\
+        & + v(|V|, |V|_{min}, |V|_{max}) \label{eq:scopf_cost}
+\end{align}
+where $v(x, x_{min}, x_{max}) = L\pn{[x - x_{max}]_+ + [x_{min} - x]_+}$, $L$ is a penalty coefficient ($L=500$ in our experiments), and $[\circ]_+ = \max(\circ, 0)$ is a hinge loss.
+
+\paragraph{Hyperparameters} Prediction and repair experiments were run for $N=50$ rounds of $K=10$ steps with $n=10$, learning rate $\lambda = 10^{-2}$ for $\phi$ and $10^{-6}$ for $\theta$, tempering parameter $\alpha = 10$, and $J^* = 4$ and $6$ for the 14-bus and 57-bus networks, respectively. $R_1$ was quenched for 25 and 20 rounds for the small and large networks, respectively. Gradients were clipped with magnitude $100$ times the square root of the dimension of the parameter space.
+
+\subsection{Search Problem Definition}
+
+This problem includes $n_{seek}$ seeker robots and $n_{hide}$ hider robots. Each robot is modeled using single-integrator dynamics and tracks a pre-planned trajectory using a proportional controller with saturation at a maximum speed chosen to match that of the Robotarium platform~\cite{wilsonRobotariumGloballyImpactful2020}. The trajectory $\vec{x}_i(t)$ for each robot is represented as a Bezier curve with 5 control points $\vec{x}_{i, j}$,
+\begin{align*}
+    \vec{x}_i(t) = \sum_{j=0}^4 \binom{4}{j}(1-t)^{4-j}t^j \vec{x}_{i, j}
+\end{align*}
+
+The design parameters are the 2D position of the control points for the trajectories of the seeker robots, while the exogenous parameters are the control points for the hider robots. The prior distribution for each set of parameters is uniform over the width and height of the Robotarium arena ($\SI{3.2}{m}\times\SI{2}{m}$).
+
+\paragraph{Cost} We simulate the behavior of the robots tracking these trajectories for \SI{100}{s} with a discrete time step of \SI{0.1}{s} (including the effects of velocity saturation that are observed on the physical platform), and the cost function is
+\begin{align*}
+    J = 100 \sum_{i=1}^{n_{hide}}\pn{\mathop{\widetilde{\min}}_{t = t_0, \ldots, t_{n}} \pn{\mathop{\widetilde{\min}}_{j=1, \ldots, n_{seek}}\norm{\vec{p}_{hide, i}(t) - \vec{p}_{seek, j}(t)} - r}}
+\end{align*}
+%
+where $r$ is the sensing range of the seekers (\SI{0.5}{m} for the $n_{seek} = 2$ case and \SI{0.25}{m} for the $n_{seek}=3$ case); $\widetilde{\min}(\circ) = -\frac{1}{b}\text{logsumexp}(-b\ \circ)$ is a smooth relaxation of the element-wise minimum function where $b$ controls the degree of smoothing ($b=100$ in our experiments); $t_0, \ldots, t_{n}$ are the discrete time steps of the simulation; and $\vec{p}_{hide, i}(t)$ and $\vec{p}_{seek, j}(t)$ are the $(x, y)$ position of the $i$-th hider and $j$-th seeker robot at time $t$, respectively. In plain language, this cost is equal to the sum of the minimum distance observed between each hider and the closest seeker over the course of the simulation, adjusted for each seeker's search radius.
+
+\paragraph{Hyperparameters} Prediction and repair experiments were run for $N=100$ rounds of $K=50$ steps with $n=10$, learning rate $\lambda = 10^{-2}$ for $\phi$ and $\theta$, tempering parameter $\alpha = 5$, and $J^* = 0$.  $R_1$ was quenched for 20 and 40 rounds for the small and large problems, respectively.
+
+\subsection{Formation Control Problem Definition}
+
+This problem includes $n$ drones modeled using double-integrator dynamics, each tracking a pre-planned path using a proportional-derivative controller. The path for each drone is represented as a Bezier, as in the pursuit-evasion problem.
+
+The design parameters are the 2D position of the control points for the trajectories, while the exogenous parameters include the parameters of a wind field and connection strengths between each pair of drones. The wind field is modeled using a 3-layer fully-connected neural network with $\tanh$ saturation at a maximum speed that induces \SI{0.5}{N} of drag force on each drone.
+
+\paragraph{Cost} We simulate the behavior of the robots tracking these trajectories for \SI{30}{s} with a discrete time step of \SI{0.05}{s}, and the cost function is
+\begin{align*}
+    J = 50 ||COM_T - COM_{goal}|| + 5 \max_{t} \frac{1}{\lambda_2(q_t) + 10^{-2}}
+\end{align*}
+%
+where $COM$ indicates the center of mass of the formation and $\lambda_2(q_t)$ is the second eigenvalue of the Laplacian of the drone network in configuration $q_t$. The Laplacian $L = D - A$ is defined in terms of the adjacency matrix $A = \set{a_{ij}}$, where $a_{ij} = s_{ij}\sigma\pn{20 (R^2 - d_{ij}^2)}$, $d_ij$ is the distance between drones $i$ and $j$, $R$ is the communication radius, and $s_{ij}$ is the connection strength (an exogenous parameter) between the two drones. The degree matrix $D$ is a diagonal matrix where each entry is the sum of the corresponding row of $A$.
+
+\paragraph{Hyperparameters} Prediction and repair experiments were run for $N=50$ rounds of $K=50$ steps with $n=5$, learning rate $\lambda = 10^{-5}$ for $\phi$ and $\theta$ on the small problem and $10^{-4}$ on the large problem, tempering parameter $\alpha = 5$, and $J^* = 10.0$.  $R_1$ was quenched for 20 rounds. Gradients were clipped with magnitude $100$ times the square root of the dimension of the parameter space.
+
+\subsection{Grasping}
+
+Each task in the grasping environment involved a target object (either a box or a mug) on a table along with a distractor object (a cube). A 64x64 depth image was rendered from a fixed camera position and passed to a grasp identification policy, which was structured as an auto-encoder with 3 convolutional layers and 3 transposed convolutional layers (each with kernel size 7, stride 2, and 32 channels, and ReLU activations). The policy was trained to identify grasp affordances on the object in the form of an image of the same size as the output highlightling the ``graspable'' regions of the object (this is a common strategy in robot manipulation). $\theta$ includes all parameters of the autoencoder, and the environmental parameters $\phi$ included the 2D pose $[x, y, \psi]$ of the target object and the $x$ position of the distractor object, all treated as Gaussian random variables. The affordance autoencoder network was trained using ground-truth affordances from hand-labelling of the target object.
+
+\paragraph{Cost} The cost function for all grasping tasks was the mean square error between the predicted and ground-truth grasp affordances.
+
+\paragraph{Hyperparameters} We ran experiments for $N=5$ rounds of $K=5$ steps with population size $n=5$. All methods used learning rate $\lambda = 10^{-3}$ for $\phi$ and $10^{-5}$ for $\theta$, with tempering parameter $\alpha = 40$. Quenching was not used on this problem.
+
+\subsection{Drone}
+
+All drone environments included a corridor \SI{8}{m} wide and \SI{30}{m} long, with the drone starting roughly \SI{10}{m} away from the target (placed at the origin and marked by a black square and red ``H''). There are 5 obstacles in the scene, modeled as green cylinders with radius \SI{0.5}{m}. The drone has Dubins car dynamics restricted to the $xy$ plane, with control actions for velocity and yaw rate. Control actions are predicted by a policy that takes 32x32 RGB and depth images as input, encodes the images using three convolutional layers (kernel size 7, stride 1, 32 channels), and predicts control actions using a fully connected network with 4 hidden layers of 32 units each (all layers used ReLU activation). $\theta$ includes all parameters of the policy, and the environmental parameters $\phi$ include the initial position of the drone (treated as a Gaussian random variable centered \SI{10}{m} away from the target) and the initial positions of all obstacles (treated as uniformly distributed throughout the corridor between the starting point and the target). The drone's initial policy was trained to mimic an oracle with perfect state information, which we implemented as an optimization-based receding-horizon path planner with perfect information about the state and velocity of the drone and all obstacles.
+
+\paragraph{Cost} The cost for both drone examples was the (soft) minimum reward over a trajectory plus the distance to the goal at the end of the trajectory:
+\begin{align}
+    J   & = -\text{logsumexp}(-r_t) + \frac{1}{2} \sqrt{x_T^2 + y_T^2} \\
+    r_t & = -10 \sigma(5 \min_i d_i)
+\end{align}
+where the reward at each timestep $r_t$ is based on the minimum distance $\min_i d_i$ to any obstacle in the scene and $sigma$ is the sigmoid function (used as a smooth approximation of the indicator function).
+
+\paragraph{Hyperparameters} We ran experiments for $N=5$ rounds of $K=5$ steps with $n=5$ and learning rate $\lambda = 10^{-2}$ for $\phi$ and $\theta$, with tempering parameter $\alpha = 40$. Quenching was not used on this problem.
+
+\subsection{AV}
+
+All AV examples use bicycle kinematics for all agents, with state $[x, y, \psi, v]$, including position, heading, and velocity, and control actions $[\delta, a]$ for steering angle and acceleration. The continuous time dynamics
+\begin{align}
+    \dot{x}    & = v \cos\psi             \\
+    \dot{y}    & = v \sin\psi             \\
+    \dot{\psi} & = \frac{v}{l} \tan\delta \\
+    \dot{v}    & = a
+\end{align}
+were discretized with timestep \SI{0.1}{s}. The parameter $l$ denotes axle length and was set to \SI{1}{m}. Control actions were predicted based on 32x32 RGB and depth images using the same structure as the drone policy (3 convolutional layers and 4 fully connected layers, but the convolutional layers had kernel size 6). In both the highway and intersection tasks, $\theta$ includes all trainable parameters of the policy network.
+
+\subsection{Highway}
+
+The highway example included 2 lanes of traffic, with total width \SI{15}{m}. We placed one non-ego agent in each lane; these agents track a series of waypoints using an LQR controller. The environmental parameters $\phi$ include all of these waypoints (5 2D waypoints per non-ego agent), which we modeled as drawn from a Gaussian distribution about a straight-line path. Future work could explore using a generative model as the prior for non-ego driving agents. The task was simulated for 60 timesteps. The driving policy was pre-trained using proximal policy optimization (PPO) with the same reward as used for testing.
+
+\paragraph{Cost} The cost was the soft minimum reward observed over the course of the trajectory:
+\begin{align}
+    J   & = -\text{logsumexp}(-r_t)            \\
+    r_t & = -10 \sigma(5 \min_i d_i) + 0.1 v_t
+\end{align}
+where the reward at each timestep $r_t$ is based on the minimum distance $\min_i d_i$ to any obstacle in the scene and the forward velocity ; $sigma$ is the sigmoid function (used as a smooth approximation of the indicator function).
+
+\paragraph{Hyperparameters} We ran experiments for $N=10$ rounds of $K=10$ steps with population size $n=5$. All methods used learning rate $\lambda = 10^{-2}$ for $\phi$ and $2\times10^{-5}$ for $\theta$, with tempering parameter $\alpha = 20$. Quenching was not used on this problem.
+
+\subsection{Intersection}
+
+The intersection example included a 4-way intersection, with 2 lanes of traffic in each \SI{15}{m} wide road. We placed two non-ego agent moving left to right in the crossing street and one non-ego agent crossing right to left. Similarly to the highway task, these agents were controlled via LQR to track uncertain trajectories centered about straigt lines. The task was simulated for 70 timesteps. The driving policy was trained using behavior cloning with supervision from an oracle with perfect information about the state of the other agents, which we implemented as a receding-horizon optimization-based path planner.
+
+\paragraph{Cost} The cost was the soft minimum reward observed over the course of the trajectory plus a term to test whether the ego agent successfully crosses the intersection.
+\begin{align}
+    J   & = -\text{logsumexp}(-r_t) + 0.1 [x_T - x_{target}]_+ \\
+    r_t & = -10 \sigma(5 \min_i d_i)
+\end{align}
+where the reward at each timestep $r_t$ is based on the minimum distance $\min_i d_i$ to any obstacle in the scene and $x_{target} = 20$; $sigma$ is the sigmoid function (used as a smooth approximation of the indicator function).
+
+\paragraph{Hyperparameters} Prediction and repair experiments were run for $N=10$ rounds of $K=10$ steps with $n=5$ and learning rate $\lambda = 10^{-2}$ for $\phi$ and $10^{-4}$ for $\theta$, with tempering parameter $\alpha = 20$. Quenching was not used on this problem.
