@@ -2108,6 +2108,22 @@
   file = {/home/cbd/Zotero/storage/5XLT6JG2/full-text.pdf}
 }
 
+@inproceedings{huChainQueenRealTimeDifferentiable2019,
+  title = {{{ChainQueen}}: {{A Real-Time Differentiable Physical Simulator}} for {{Soft Robotics}}},
+  shorttitle = {{{ChainQueen}}},
+  booktitle = {2019 {{International Conference}} on {{Robotics}} and {{Automation}} ({{ICRA}})},
+  author = {Hu, Yuanming and Liu, Jiancheng and Spielberg, Andrew and Tenenbaum, Joshua B. and Freeman, William T. and Wu, Jiajun and Rus, Daniela and Matusik, Wojciech},
+  year = {2019},
+  month = may,
+  pages = {6265--6271},
+  publisher = {IEEE Press},
+  address = {Montreal, QC, Canada},
+  doi = {10.1109/ICRA.2019.8794333},
+  urldate = {2024-03-10},
+  abstract = {Physical simulators have been widely used in robot planning and control. Among them, differentiable simulators are particularly favored, as they can be incorporated into gradient-based optimization algorithms that are efficient in solving inverse problems such as optimal control and motion planning. Therefore, rigid body simulators and recently their differentiable variants are studied extensively. Simulating deformable objects is, however, more challenging compared to rigid body dynamics. The underlying physical laws of deformable objects are more complex, and the resulting systems have orders of magnitude more degrees of freedom and there-fore they are significantly more computationally expensive to simulate. Computing gradients with respect to physical design or controller parameters is typically even more computationally challenging. In this paper, we propose a real-time, differentiable hybrid Lagrangian-Eulerian physical simulator for deformable objects, ChainQueen, based on the Moving Least Squares Material Point Method (MLS-MPM). MLS-MPM can simulate deformable objects with collisions and can be seamlessly incorporated into soft robotic systems. We demonstrate that our simulator achieves high precision in both forward simulation and backward gradient computation. We have successfully employed it in a diverse set of inference, control and co-design tasks for soft robotics.},
+  file = {/home/cbd/Zotero/storage/HGKUS68V/Hu et al. - 2019 - ChainQueen A Real-Time Differentiable Physical Si.pdf}
+}
+
 @inproceedings{huDiffTaichiDifferentiableProgramming2019,
   title = {{{DiffTaichi}}: {{Differentiable Programming}} for {{Physical Simulation}}},
   shorttitle = {{{DiffTaichi}}},
@@ -2575,6 +2591,24 @@
   volume = {2}
 }
 
+@misc{leeAquariumFullyDifferentiable2023,
+  title = {Aquarium: {{A Fully Differentiable Fluid-Structure Interaction Solver}} for {{Robotics Applications}}},
+  shorttitle = {Aquarium},
+  author = {Lee, Jeong Hun and Michelis, Mike Y. and Katzschmann, Robert and Manchester, Zachary},
+  year = {2023},
+  month = mar,
+  number = {arXiv:2301.07028},
+  eprint = {2301.07028},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2301.07028},
+  urldate = {2024-03-10},
+  abstract = {We present Aquarium, a differentiable fluid-structure interaction solver for robotics that offers stable simulation, accurately coupled fluid-robot physics in two dimensions, and full differentiability with respect to fluid and robot states and parameters. Aquarium achieves stable simulation with accurate flow physics by directly integrating over the incompressible Navier-Stokes equations using a fully implicit Crank-Nicolson scheme with a second-order finite-volume spatial discretization. The fluid and robot physics are coupled using the immersed-boundary method by formulating the no-slip condition as an equality constraint applied directly to the Navier-Stokes system. This choice of coupling allows the fluid-structure interaction to be posed and solved as a nonlinear optimization problem. This optimization-based formulation is then exploited using the implicit-function theorem to compute derivatives. Derivatives can then be passed to downstream gradient-based optimization or learning algorithms. We demonstrate Aquarium's ability to accurately simulate coupled fluid-robot physics with numerous 2D examples, including a cylinder in free stream and a soft robotic fish tail with hardware validation. We also demonstrate Aquarium's ability to provide analytical gradients by performing gradient-based shape-and-gait optimization of an oscillating diamond foil to maximize its generated thrust.},
+  archiveprefix = {arxiv},
+  keywords = {Computer Science - Robotics},
+  file = {/home/cbd/Zotero/storage/6C3LMTH5/Lee et al. - 2023 - Aquarium A Fully Differentiable Fluid-Structure I.pdf;/home/cbd/Zotero/storage/EPHGQDXH/2301.html}
+}
+
 @article{leeSignalTemporalLogic2021,
   title = {Signal {{Temporal Logic Synthesis}} as {{Probabilistic Inference}}},
   author = {Lee, Ki Myung Brian and Yoo, Chanyeol and Fitch, Robert},
@@ -2706,6 +2740,19 @@
   archiveprefix = {arxiv},
   keywords = {Computer Science - Machine Learning,Statistics - Machine Learning},
   file = {/home/cbd/Zotero/storage/T5YM56YT/Liang et al. - 2020 - Enhancing The Reliability of Out-of-distribution I.pdf;/home/cbd/Zotero/storage/2MZKVCNJ/1706.html}
+}
+
+@book{liberzonCalculusVariationsOptimal2012,
+  title = {Calculus of {{Variations}} and {{Optimal Control Theory}}: {{A Concise Introduction}}},
+  shorttitle = {Calculus of {{Variations}} and {{Optimal Control Theory}}},
+  author = {Liberzon, Daniel},
+  year = {2012},
+  month = jan,
+  publisher = {Princeton University Press},
+  address = {Princeton ; Oxford},
+  abstract = {This textbook offers a concise yet rigorous introduction to calculus of variations and optimal control theory, and is a self-contained resource for graduate students in engineering, applied mathematics, and related subjects. Designed specifically for a one-semester course, the book begins with calculus of variations, preparing the ground for optimal control. It then gives a complete proof of the maximum principle and covers key topics such as the Hamilton-Jacobi-Bellman theory of dynamic programming and linear-quadratic optimal control. Calculus of Variations and Optimal Control Theory also traces the historical development of the subject and features numerous exercises, notes and references at the end of each chapter, and suggestions for further study. Offers a concise yet rigorous introduction  Requires limited background in control theory or advanced mathematics  Provides a complete proof of the maximum principle  Uses consistent notation in the exposition of classical and modern topics  Traces the historical development of the subject  Solutions manual (available only to teachers) Leading universities that have adopted this book include: University of Illinois at Urbana-Champaign ECE 553: Optimum Control Systems   Georgia Institute of Technology ECE 6553: Optimal Control and Optimization   University of Pennsylvania ESE 680: Optimal Control Theory  University of Notre Dame EE 60565: Optimal Control},
+  isbn = {978-0-691-15187-8},
+  langid = {english}
 }
 
 @article{lindemannRobustMotionPlanning2017,
@@ -2960,6 +3007,22 @@
   abstract = {Distributed systems are comprised of multiple subsystems that interact in two distinct ways: (1) physical interactions and (2) cyber interactions; i.e. sensors, actuators and computers controlling these subsystems, and the network over which they communicate. A broad class of cyber-physical systems (CPS) are described by such interactions, such as the smart grid, platoons of autonomous vehicles and the sensorimotor system. This paper will survey recent progress in developing a coherent mathematical framework that describes the rich CPS "design space" of fundamental limits and tradeoffs between efficiency, robustness, adaptation, verification and scalability. Whereas most research treats at most one of these issues, we attempt a holistic approach in examining these metrics. In particular, we will argue that a control architecture that emphasizes scalability leads to improvements in robustness, adaptation, and verification, all the while having only minor effects on efficiency - i.e. through the choice of a new architecture, we believe that we are able to bring a system closer to the true fundamental hard limits of this complex design space. {\copyright} 2014 The Authors. Published by Elsevier B.V.},
   keywords = {control theory,Control theory,Convex optimization,Distributed,distributed systems,Fundamental limits,Large scale,Layered architecture,Resilient,Tradeoffs},
   file = {/home/cbd/Zotero/storage/JZS6VX3Q/full-text.pdf}
+}
+
+@article{matthewsEfficientAutomaticDesign2023,
+  title = {Efficient Automatic Design of Robots},
+  author = {Matthews, David and Spielberg, Andrew and Rus, Daniela and Kriegman, Sam and Bongard, Josh},
+  year = {2023},
+  month = oct,
+  journal = {Proceedings of the National Academy of Sciences},
+  volume = {120},
+  number = {41},
+  pages = {e2305180120},
+  publisher = {Proceedings of the National Academy of Sciences},
+  doi = {10.1073/pnas.2305180120},
+  urldate = {2024-03-10},
+  abstract = {Robots are notoriously difficult to design because of complex interdependencies between their physical structure, sensory and motor layouts, and behavior. Despite this, almost every detail of every robot built to date has been manually determined by a human designer after several months or years of iterative ideation, prototyping, and testing. Inspired by evolutionary design in nature, the automated design of robots using evolutionary algorithms has been attempted for two decades, but it too remains inefficient: days of supercomputing are required to design robots in simulation that, when manufactured, exhibit desired behavior. Here we show de novo optimization of a robot's structure to exhibit a desired behavior, within seconds on a single consumer-grade computer, and the manufactured robot's retention of that behavior. Unlike other gradient-based robot design methods, this algorithm does not presuppose any particular anatomical form; starting instead from a randomly-generated apodous body plan, it consistently discovers legged locomotion, the most efficient known form of terrestrial movement. If combined with automated fabrication and scaled up to more challenging tasks, this advance promises near-instantaneous design, manufacture, and deployment of unique and useful machines for medical, environmental, vehicular, and space-based tasks.},
+  file = {/home/cbd/Zotero/storage/M25CSAKH/Matthews et al. - 2023 - Efficient automatic design of robots.pdf}
 }
 
 @article{mdo_ocean_robot,
@@ -3390,6 +3453,35 @@
   year = {2019},
   pages = {8024--8035},
   publisher = {Curran Associates, Inc.}
+}
+
+@inproceedings{qiaoDifferentiableSimulationSoft2021,
+  title = {Differentiable {{Simulation}} of {{Soft Multi-body Systems}}},
+  booktitle = {Advances in {{Neural Information Processing Systems}}},
+  author = {Qiao, Yi-Ling and Liang, Junbang and Koltun, Vladlen and Lin, Ming},
+  year = {2021},
+  month = nov,
+  urldate = {2024-03-10},
+  abstract = {We present a method for differentiable simulation of soft articulated bodies. Our work enables the integration of differentiable physical dynamics into gradient-based pipelines. We develop a top-down matrix assembly algorithm within Projective Dynamics and derive a generalized dry friction model for soft continuum using a new matrix splitting strategy. We derive a differentiable control framework for soft articulated bodies driven by muscles, joint torques, or pneumatic tubes. The experiments demonstrate that our designs make soft body simulation more stable and realistic compared to other frameworks. Our method accelerates the solution of system identification problems by more than an order of magnitude, and enables efficient gradient-based learning of motion control with soft robots.},
+  langid = {english},
+  file = {/home/cbd/Zotero/storage/HA5TZXNT/Qiao et al. - 2021 - Differentiable Simulation of Soft Multi-body Syste.pdf}
+}
+
+@misc{qiaoEfficientDifferentiableSimulation2021,
+  title = {Efficient {{Differentiable Simulation}} of {{Articulated Bodies}}},
+  author = {Qiao, Yi-Ling and Liang, Junbang and Koltun, Vladlen and Lin, Ming C.},
+  year = {2021},
+  month = sep,
+  number = {arXiv:2109.07719},
+  eprint = {2109.07719},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2109.07719},
+  urldate = {2024-03-10},
+  abstract = {We present a method for efficient differentiable simulation of articulated bodies. This enables integration of articulated body dynamics into deep learning frameworks, and gradient-based optimization of neural networks that operate on articulated bodies. We derive the gradients of the forward dynamics using spatial algebra and the adjoint method. Our approach is an order of magnitude faster than autodiff tools. By only saving the initial states throughout the simulation process, our method reduces memory requirements by two orders of magnitude. We demonstrate the utility of efficient differentiable dynamics for articulated bodies in a variety of applications. We show that reinforcement learning with articulated systems can be accelerated using gradients provided by our method. In applications to control and inverse problems, gradient-based optimization enabled by our work accelerates convergence by more than an order of magnitude.},
+  archiveprefix = {arxiv},
+  keywords = {Computer Science - Graphics,Computer Science - Machine Learning,Computer Science - Robotics},
+  file = {/home/cbd/Zotero/storage/8PVKRNFC/Qiao et al. - 2021 - Efficient Differentiable Simulation of Articulated.pdf;/home/cbd/Zotero/storage/KK72HFQA/2109.html}
 }
 
 @inproceedings{qiDryVRToolVerification2018,

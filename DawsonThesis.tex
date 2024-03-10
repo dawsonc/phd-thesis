@@ -204,8 +204,8 @@
 
 % If there is more than one supervisor, use the \Supervisor command for each.
 \Supervisor{Chuchu Fan}{Associate Professor of Aeronautics and Astronautics}
-% \Supervisor{Russ Tedrake}{Professor of Electrical Engineering and Computer Science}
-% \Supervisor{Serta\c c Karaman}{Professor of Aeronautics and Astronautics}
+\Supervisor{Russ Tedrake}{Professor of Electrical Engineering and Computer Science}
+\Supervisor{Serta\c c Karaman}{Professor of Aeronautics and Astronautics}
 
 % Professor who formally accepts theses for your department (e.g., the Graduate Officer, Professor Sméagol,...)
 % If more than one department, use more than once
@@ -288,25 +288,23 @@
 %%% Chapters of thesis  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% If you want to use "double spacing", you should start here...
-\onehalfspacing
+% \onehalfspacing
+\doublespacing
 
-%% TODO: update subsections to sections (so top level is chapter, then section, then subsection)
-
-\include{chapters/introduction}
+\include{chapters/introduction}  % TODO introduction
 \include{chapters/literature_review}
 \include{chapters/rss}
 \include{chapters/iros}
 \include{chapters/corl}
-% \include{chapters/icml}
-% \include{chapters/local_methods}
-% \include{chapters/global_methods}
-% \include{chapters/post_mortem}
+\include{chapters/icml}
+% TODO conclusion
 
 %%% Appendicies of thesis  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \appendix
 \include{appendices/rss_appendix}
 \include{appendices/corl_appendix}
+\include{appendices/icml_appendix}
 
 
 %%% Bibliography  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

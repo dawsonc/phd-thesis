@@ -4,7 +4,7 @@
 
 This section provides more details on the environments used as benchmark problems in Chapter~\ref{ch:corl}.
 
-\subsection{AC Power Flow Problem Definition}
+\subsection{AC power flow problem definition}
 The design parameters $x = (P_g, |V|_g, P_l, Q_l)$ include the real power injection $P_g$ and AC voltage amplitude $|V|_g$ at each generator in the network and the real and reactive power draws at each load $P_l, Q_l$; all of these parameters are subject to minimum and maximum bounds that we model using a uniform prior distribution $p_{x, 0}$. The exogenous parameters are the state $y_i \in \R$ of each transmission line in the network; the admittance of each line is given by $\sigma(y_i) Y_{i, nom}$ where $\sigma$ is the sigmoid function and $Y_{i, nom}$ is the nominal admittance of the line. The prior distribution $p_{y, 0}$ is an independent Gaussian for each line with a mean chosen so that $\int_{-\infty}^0 p_{y_i, 0}(y_i) dy_i$ is equal to the likelihood of any individual line failing (e.g. as specified by the manufacturer; we use $0.05$ in our experiments). The simulator $S$ solves the nonlinear AC power flow equations~\cite{cainHistoryOptimalPower2012} to determine the AC voltage amplitudes and phase angles $(|V|, \theta)$ and the net real and reactive power injections $(P, Q)$ at each bus (the behavior $\xi$ is the concatenation of these values). We follow the 2-step method described in~\cite{dontiDC3LearningMethod2021} where we first solve for the voltage and voltage angles at all buses by solving a system of nonlinear equations and then compute the reactive power injection from each generator and the power injection from the slack bus (representing the connection to the rest of the grid). The cost function $J$ is a combination of the generation cost implied by $P_g$ and a hinge loss penalty for violating constraints on acceptable voltages at each bus or exceeding the power generation limits of any generator, as specified in Eq.~\ref{eq:scopf_cost}. The data for each test case (minimum and maximum voltage and power limits, demand characteristics, generator costs, etc.) are loaded from the data files included in the MATPOWER software~\cite{zimmermanMATPOWERSteadyStateOperations2011}.
 
 \paragraph{Cost} The cost function combines the economic cost of generation $c_g$ (a quadratic function of $P_g, P_l, Q_l$) with the total violation of constraints on generator capacities, load requirements, and voltage amplitudes:
@@ -17,7 +17,7 @@ where $v(x, x_{min}, x_{max}) = L\pn{[x - x_{max}]_+ + [x_{min} - x]_+}$, $L$ is
 
 \paragraph{Hyperparameters} Prediction and repair experiments were run for $N=50$ rounds of $K=10$ steps with $n=10$, learning rate $\lambda = 10^{-2}$ for $\phi$ and $10^{-6}$ for $\theta$, tempering parameter $\alpha = 10$, and $J^* = 4$ and $6$ for the 14-bus and 57-bus networks, respectively. $R_1$ was quenched for 25 and 20 rounds for the small and large networks, respectively. Gradients were clipped with magnitude $100$ times the square root of the dimension of the parameter space.
 
-\subsection{Search Problem Definition}
+\subsection{Search problem definition}
 
 This problem includes $n_{seek}$ seeker robots and $n_{hide}$ hider robots. Each robot is modeled using single-integrator dynamics and tracks a pre-planned trajectory using a proportional controller with saturation at a maximum speed chosen to match that of the Robotarium platform~\cite{wilsonRobotariumGloballyImpactful2020}. The trajectory $\vec{x}_i(t)$ for each robot is represented as a Bezier curve with 5 control points $\vec{x}_{i, j}$,
 \begin{align*}
@@ -35,7 +35,7 @@ where $r$ is the sensing range of the seekers (\SI{0.5}{m} for the $n_{seek} = 2
 
 \paragraph{Hyperparameters} Prediction and repair experiments were run for $N=100$ rounds of $K=50$ steps with $n=10$, learning rate $\lambda = 10^{-2}$ for $\phi$ and $\theta$, tempering parameter $\alpha = 5$, and $J^* = 0$.  $R_1$ was quenched for 20 and 40 rounds for the small and large problems, respectively.
 
-\subsection{Formation Control Problem Definition}
+\subsection{Formation control problem definition}
 
 This problem includes $n$ drones modeled using double-integrator dynamics, each tracking a pre-planned path using a proportional-derivative controller. The path for each drone is represented as a Bezier, as in the pursuit-evasion problem.
 
@@ -82,7 +82,7 @@ All AV examples use bicycle kinematics for all agents, with state $[x, y, \psi, 
 \end{align}
 were discretized with timestep \SI{0.1}{s}. The parameter $l$ denotes axle length and was set to \SI{1}{m}. Control actions were predicted based on 32x32 RGB and depth images using the same structure as the drone policy (3 convolutional layers and 4 fully connected layers, but the convolutional layers had kernel size 6). In both the highway and intersection tasks, $\theta$ includes all trainable parameters of the policy network.
 
-\subsection{Highway}
+\subsubsection{Highway}
 
 The highway example included 2 lanes of traffic, with total width \SI{15}{m}. We placed one non-ego agent in each lane; these agents track a series of waypoints using an LQR controller. The environmental parameters $\phi$ include all of these waypoints (5 2D waypoints per non-ego agent), which we modeled as drawn from a Gaussian distribution about a straight-line path. Future work could explore using a generative model as the prior for non-ego driving agents. The task was simulated for 60 timesteps. The driving policy was pre-trained using proximal policy optimization (PPO) with the same reward as used for testing.
 
@@ -95,7 +95,7 @@ where the reward at each timestep $r_t$ is based on the minimum distance $\min_i
 
 \paragraph{Hyperparameters} We ran experiments for $N=10$ rounds of $K=10$ steps with population size $n=5$. All methods used learning rate $\lambda = 10^{-2}$ for $\phi$ and $2\times10^{-5}$ for $\theta$, with tempering parameter $\alpha = 20$. Quenching was not used on this problem.
 
-\subsection{Intersection}
+\subsubsection{Intersection}
 
 The intersection example included a 4-way intersection, with 2 lanes of traffic in each \SI{15}{m} wide road. We placed two non-ego agent moving left to right in the crossing street and one non-ego agent crossing right to left. Similarly to the highway task, these agents were controlled via LQR to track uncertain trajectories centered about straigt lines. The task was simulated for 70 timesteps. The driving policy was trained using behavior cloning with supervision from an oracle with perfect information about the state of the other agents, which we implemented as a receding-horizon optimization-based path planner.
 

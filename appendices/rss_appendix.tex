@@ -1,8 +1,6 @@
 \chapter{Appendix to Chapter~\ref{ch:rss}}
 
-% TODO fix formatting of tables
-
-\section{Sensor Placement Design Problem Statement}
+\section{Sensor placement design problem statement}
 
 We model the robot with discrete-time Dubins dynamics with three state variables ($q = [x, y, \theta]$), two control inputs for linear and angular velocity ($u = [v, \omega]$), and noisy transition model
 \begin{align*}
@@ -20,7 +18,7 @@ where $v_t$ is the measurement noise ($v_t \sim \mathcal(0, R)$ and covariance $
     \label{ch:rss:tab:agv_design_problem}
     \begin{tabular}{|p{2.5cm}|p{14cm}|}
         \hline
-        Design\ \ parameters & \begin{tabular}[c]{@{}l@{}}
+        Design parameters    & \begin{tabular}[c]{@{}l@{}}
                                    $\theta = [b_1, b_2, k] \in \R^6$ \\ Beacon locations: $b_i = (x_{bi}, y_{bi}) \in \R^2$ for $i=1,2$ \\
                                    Feedback gains: $k \in \R^2$
                                \end{tabular}                                                                                                                                                                                                                                                                                                                                                                                                                                             \\ \hline
@@ -48,7 +46,7 @@ where $v_t$ is the measurement noise ($v_t \sim \mathcal(0, R)$ and covariance $
     \end{tabular}
 \end{table}
 
-\section{Multi-agent Manipulation Design Problem Statement}
+\section{Multi-agent manipulation design problem statement}
 
 We model each ground robot as a double integrator with states $[p_x, p_y, \theta, v_x, v_y, \omega]$. Given control inputs representing desired linear velocity $v_d$ in the $[\cos\theta, \sin\theta]$ direction and desired angular velocity $\omega_d$, the robot tracks those desired velocities by applying forces and torques subject to a friction cone constraint. The box is modeled as a rigid body with friction against the ground. Contact forces between the box and each robot are modeled using a penalty method described in~\cite{suh2021_bundled_gradients}, where the normal force is given by $f_n = k_c \min(\phi, 0) - k_d \dot{\phi} \mathbbm{1}_{\phi < 0}$ ($\phi$ is the signed distance between the robot and the box, $k_c = \SI{300}{N/m}$ is the contact stiffness, $k_d$ is a damping coefficient chosen to ensure critical damping, and $\mathbbm{1}_{\phi < 0}$ is the indicator function equal to 1 when the box and robot are in contact and 0 otherwise). Friction in the box/ground and box/robot contacts was modeled as Coulomb friction, resulting in a tangential force $f_t = \mu f_n$ with $\mu = c\psi$ if $\psi < \psi_s$ and $\mu = \mu_d$ otherwise, where $mu_d$ is the coefficient of dynamic friction ($\mu_d$ varies for each contact pair), $\psi$ is the tangential velocity at the point of contact, $\psi_s = \SI{0.3}{m/s}$ is the tangential velocity where slipping begins, and $c = \mu_d / \psi_s$ was chosen to ensure a continuous friction model.
 
@@ -62,7 +60,7 @@ Formally, we define this problem in the language of our framework (design parame
     \label{ch:rss:tab:mam_design_problem}
     \begin{tabular}{|p{2.5cm}|p{14cm}|}
         \hline
-        Design\ \ parameters & \begin{tabular}[c]{@{}l@{}}$\theta = [k_v, k_\omega, w_i, b_i] \in \R^{2 + n_p}$\\ Trajectory tracking gains: $[k_v, k_w] \in \R^2$\\ Network weights and biases: $(w_i, b_i)$ for $i=1,\ldots,n_p$\end{tabular}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             \\ \hline
+        Design parameters & \begin{tabular}[c]{@{}l@{}}$\theta = [k_v, k_\omega, w_i, b_i] \in \R^{2 + n_p}$\\ Trajectory tracking gains: $[k_v, k_w] \in \R^2$\\ Network weights and biases: $(w_i, b_i)$ for $i=1,\ldots,n_p$\end{tabular}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             \\ \hline
         Exogenous parameters & \begin{tabular}[c]{@{}l@{}}$\phi = [\mu_{rg}, \mu_{bg}, \mu_{br}, m_b, p_{bd}, p_{r1}, p_{r2}] \in \R^{13}$  \\ Robot/ground, box/ground, box/robot coefficients of friction:\\\quad$[\mu_{rg}, \mu_{bg}, \mu_{br}] \in [0.6, 0.8] \times [0.4, 0.6] \times [0.1, 0.3]$ \\
                                    Box mass: $m_b \in [0.9, 1.1]$                                                                \\
                                    Desired box pose:                                                                             \\\quad $p_{bd} = [x_d, y_d, \theta_d] \in [0, 0.5]^2 \times [-\pi/4, \pi/4]$ \\ (Above parameters are uniformly distributed) \\

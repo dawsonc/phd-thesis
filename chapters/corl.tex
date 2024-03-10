@@ -515,7 +515,7 @@ There are two important conclusions to be drawn from comparing the convergence r
 
 The second important conclusion from Fig.~\ref{ch:corl:fig:power_training_curves} is the importance of quenching $R_1$ on this problem (i.e. disabling the stochastic part of the sampling algorithm and taking a few gradient descent steps during the final rounds). Prior to quenching, $R_1$ converges to a solution with similar 99\textsubscript{th} percentile cost as \gdr{} and \gda{}, but after quenching (in the last 20 rounds), $R_1$ is able to find a solution with a much lower cost. This is likely because of the constraints on $P$, $Q$, and $|V|$ in the SCOPF problem; sampling based methods may struggle to exactly satisfy constraints like these, as $MALA$ and $RMH$ are constantly injecting noise into the solution, and so running a few steps of gradient descent on $\theta$ towards the end of the repair process likely helps drive constraint violations to zero by converging to the local minima nearest to the solutions explored by the sampling process. The fact that $R_1$ converges to a lower-cost solution than \gdr{} or \gda{}, despite running the same gradient-based optimization process during the quenching phase, suggests that the improved exploration of designs and failures due to sampling provides an advantage over pure optimization-based methods on this problem.
 
-\subsection{Case study on multi-agent path planning}
+\subsection{Multi-agent control and path planning}
 
 We return to the search problem used as a baseline in Section~\ref{ch:corl:experiments}, where a team of seeker robots must cover a region to detect a set of hiders. The simulation environment includes $n_{seek}$ seeker robots and $n_{hide}$ hider robots. Each robot is modeled using single-integrator dynamics and tracks a pre-planned trajectory using a proportional controller with saturation at a maximum speed chosen to match that of the Robotarium platform~\cite{wilsonRobotariumGloballyImpactful2020}. The trajectory $\vec{x}_i(t)$ for each robot is represented as a Bezier curve with 5 control points $\vec{x}_{i, j}$,
 \begin{align*}
@@ -548,7 +548,7 @@ Although the gap between simulation and reality is not particularly large in thi
 
 % TODO
 
-\section{Conclusion \& Limitations}
+\section{Conclusion \& limitations}
 
 In this chapter, we close several key gaps in the prior work on adversarial design optimization. In particular, we reframe the adversarial optimization problem studied in Chapter~\ref{ch:iros} as a inference problem solved by sampling from specially constructed pseudo-posterior distributions. This reformulation brings three key advantages. First, it allows us to use gradient-based sampling algorithms that are robust to high-variance or poorly conditioned gradients that would otherwise cause a gradient-based optimization algorithm to diverge. Second, our stochastic sampling-based methods is able to avoid local minima that cause gradient-based optimizers to get stuck. Finally, since our method focused on sampling a range of high-severity failures, rather than finding a single most-severe failure, we are able to find a much more diverse set of counterexamples than prior optimization-based methods. Ultimately, these diverse counterexamples allow us to optimize against a more challenging curriculum of failure modes, leading to more robust designs.
 
