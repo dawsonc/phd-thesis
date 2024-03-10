@@ -1,0 +1,22 @@
+\begin{table}[htb]
+    \caption{ELBO (nats/dim) on held-out anomaly data for ablations of \ouralg{}. The first is our proposed method, the second fixes $c$, the third excludes the nominal data during training, and the fourth does not subsample the anomaly data. {}\textsuperscript{\textdagger}scaled by $\times 10^{-3}$}
+    \label{ch:icml:tab:ablation}
+    \vspace{-1em}
+    \begin{center}
+        \begin{small}
+            \begin{sc}
+                \begin{tabular}{lcccc}
+                    \toprule
+                                & 2D                         & SWI\textsuperscript{\textdagger} & UAV                       & ATC\textsuperscript{\textdagger} \\
+                    \midrule
+                    CalNF       & $\mathbf{-0.90}_{\pm 0.1}$ & $\mathbf{46.3}_{\pm 0.2}$        & $6.95_{\pm 1.2}$          & $\mathbf{-2.01}_{\pm 0.1}$       \\
+                    w/o $c^*$   & $-0.96_{\pm 0.2}$          & $46.2_{\pm 0.4}$                 & $\mathbf{7.86}_{\pm 1.0}$ & $-2.02_{\pm 0.1}$                \\
+                    w/o $L_n$   & $-1.12_{\pm 0.2}$          & $46.1_{\pm 0.4}$                 & $-9.22_{\pm 10}$          & $-2.03_{\pm 0.2}$                \\
+                    w/o $\Df^i$ & $-1.03_{\pm 0.2}$          & $43.9_{\pm 2.8}$                 & $-3.65_{\pm 11}$          & $-2.05_{\pm 0.1}$                \\
+                    \bottomrule
+                \end{tabular}
+            \end{sc}
+        \end{small}
+    \end{center}
+    % \vskip -0.1in
+\end{table}

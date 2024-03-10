@@ -1,0 +1,37 @@
+\begin{table}[htb]
+    \caption{ELBO (nats/dim) on held-out anomaly data and training times (in minutes) on benchmark problems. 2D and SWI use synthetic data, so additional anomaly data were generated for the test set; in all other cases, half of the anomaly data was withheld for testing. Mean and standard deviation across four seeds are reported. Our method takes longer to train (requiring $K$ times as many likelihood evaluations) but meets or exceeds the state of the art without needing additional hyperparameter tuning. {}\textsuperscript{\textdagger}scaled by $\times 10^{-3}$}
+    \label{ch:icml:tab:results}
+    \begin{center}
+        \begin{small}
+            \begin{sc}
+                \begin{tabular}{lcccc}
+                    \toprule
+                                                 & 2D                          & SWI                                              & UAV                        & ATC                                              \\ % & MNIST                \\
+                                                 & nats/dim  $\uparrow$        & nats/dim\textsuperscript{\textdagger} $\uparrow$ & nats/dim  $\uparrow$       & nats/dim\textsuperscript{\textdagger} $\uparrow$ \\ % & nats/dim  $\uparrow$ \\
+                    \midrule
+                    $\beta$-NSF ($\beta = 0.01$) & $-3.22_{\pm 0.13}$          & $43.8_{\pm 0.61}$                                & $3.30_{\pm 0.83}$          & $-2.33_{\pm 0.05}$                               \\ % &                      \\
+                    $\beta$-NSF ($\beta = 0.1$)  & $-2.03_{\pm 0.04}$          & $43.9_{\pm 0.79}$                                & $3.64_{\pm 1.27}$          & $-2.30_{\pm 0.05}$                               \\ % &                      \\
+                    $\beta$-NSF ($\beta = 1.0$)  & $-1.04_{\pm 0.06}$          & $44.1_{\pm 0.84}$                                & $2.78_{\pm 1.71}$          & $-2.12_{\pm 0.09}$                               \\ % &                      \\
+                    RNODE ($\lambda_K = 0.01$)   & $-4.58_{\pm 0.18}$          & $36.0_{\pm 3.14}$                                & $0.76_{\pm 2.31}$          & $-4.36_{\pm 1.02}$                               \\ % &                      \\
+                    RNODE ($\lambda_K = 0.1$)    & $-2.95_{\pm 0.14}$          & $36.0_{\pm 3.13}$                                & $0.76_{\pm 2.28}$          & $-4.39_{\pm 1.08}$                               \\ % &                      \\
+                    RNODE ($\lambda_K = 1.0$)    & $-1.67_{\pm 0.05}$          & $36.0_{\pm 3.06}$                                & $1.14_{\pm 2.50}$          & $-4.35_{\pm 1.04}$                               \\ % &                      \\
+                    CalNF (ours)                 & $\mathbf{-0.90}_{\pm 0.10}$ & $\mathbf{46.3}_{\pm 0.18}$                       & $\mathbf{6.95}_{\pm 1.24}$ & $\mathbf{-2.01}_{\pm 0.10}$                      \\ % &                      \\
+                    % CalNF w/o $c^*$              & $-0.96_{\pm 0.2}$           & $46.2_{\pm 0.4}$                                 & $\mathbf{7.86}_{\pm 1.0}$ & $-2.02_{\pm 0.1}$                                \\
+                    % CalNF w/o $L_n$              & $-1.12_{\pm 0.2}$           & $46.1_{\pm 0.4}$                                 & $-9.22_{\pm 10}$          & $-2.03_{\pm 0.2}$                                \\
+                    % CalNF w/o $\Df^i$            & $-1.03_{\pm 0.2}$           & $43.9_{\pm 2.8}$                                 & $-3.65_{\pm 11}$          & $-2.05_{\pm 0.1}$                                \\
+                    \midrule
+                                                 & Time $\downarrow$           & Time $\downarrow$                                & Time $\downarrow$          & Time $\downarrow$                                \\ % & Time $\downarrow$    \\
+                    $\beta$-NSF ($\beta = 0.01$) & $\mathbf{0.43}_{\pm 0.02}$  & $33.5_{\pm 0.2}$                                 & $\mathbf{16.9} \pm 0.09$   & $\mathbf{81.6}_{\pm 9.2}$                        \\ % &                      \\
+                    $\beta$-NSF ($\beta = 0.1$)  & $\mathbf{0.45}_{\pm 0.03}$  & $33.6_{\pm 0.2}$                                 & $\mathbf{17.0} \pm 0.08$   & $\mathbf{81.7}_{\pm 8.5}$                        \\ % &                      \\
+                    $\beta$-NSF ($\beta = 1.0$)  & $\mathbf{0.45}_{\pm 0.03}$  & $33.6_{\pm 0.1}$                                 & $\mathbf{16.9} \pm 0.28$   & $\mathbf{81.4}_{\pm 8.7}$                        \\ % &                      \\
+                    RNODE ($\lambda_K = 0.01$)   & $5.37_{\pm 0.17}$           & $\mathbf{25.1}_{\pm 0.5}$                        & $68.0 \pm 2.98$            & $\mathbf{82.0}_{\pm 8.4}$                        \\ % &                      \\
+                    RNODE ($\lambda_K = 0.1$)    & $5.38_{\pm 0.19}$           & $\mathbf{25.1}_{\pm 0.7}$                        & $67.5 \pm 3.60$            & $\mathbf{82.2}_{\pm 7.6}$                        \\ % &                      \\
+                    RNODE ($\lambda_K = 1.0$)    & $5.23_{\pm 0.06}$           & $\mathbf{24.9}_{\pm 0.7}$                        & $69.7 \pm 12.6$            & $\mathbf{81.8}_{\pm 8.7}$                        \\ % &                      \\
+                    CalNF (ours)                 & $0.53_{\pm 0.02}$           & $80.1_{\pm 0.5}$                                 & $45.9 \pm 0.32$            & $148.8_{\pm 16.5}$                               \\ % &                      \\
+                    \bottomrule
+                \end{tabular}
+            \end{sc}
+        \end{small}
+    \end{center}
+    % \vskip -0.1in
+\end{table}
