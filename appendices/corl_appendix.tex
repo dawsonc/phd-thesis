@@ -39,7 +39,7 @@ where $r$ is the sensing range of the seekers (\SI{0.5}{m} for the $n_{seek} = 2
 
 This problem includes $n$ drones modeled using double-integrator dynamics, each tracking a pre-planned path using a proportional-derivative controller. The path for each drone is represented as a Bezier, as in the pursuit-evasion problem.
 
-The design parameters are the 2D position of the control points for the trajectories, while the exogenous parameters include the parameters of a wind field and connection strengths between each pair of drones. The wind field is modeled using a 3-layer fully-connected neural network with $\tanh$ saturation at a maximum speed that induces \SI{0.5}{N} of drag force on each drone.
+The design parameters are the 2D position of the control points for the trajectories, while the exogenous parameters include the parameters of a wind field and connection strengths between each pair of drones. The wind field is modeled using a Gaussian kernel with saturation at a maximum speed that induces \SI{0.5}{N} of drag force on each drone.
 
 \paragraph{Cost} We simulate the behavior of the robots tracking these trajectories for \SI{30}{s} with a discrete time step of \SI{0.05}{s}, and the cost function is
 \begin{align*}

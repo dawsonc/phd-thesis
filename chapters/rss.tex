@@ -1,6 +1,5 @@
 \chapter{End-to-end Design Optimization with Statistical Robustness Certificates}\label{ch:rss}
 
-% TODO update this for flow
 To design complex systems, engineers in many fields use computer-aided tools to boost their productivity. Mechanical engineers can use a suite of 3D CAD (computer-aided design) and FEA (finite-element analysis) tools to design structures and understand their performance. Likewise, electrical engineers use electronic design automation tools, including hardware description languages like Verilog, to design and analyze large-scale, reliable, and yet highly complex integrated circuits. Sadly, when it comes to designing autonomous systems and robots, engineers often take an ad-hoc approach, relying heavily on experience and tedious parameter tuning.
 
 Two factors have made it difficult to develop automated design tools for robotics. The first is complexity: most robots are composed of many interacting subsystems. Although some tools may aid in designing certain subsystems (e.g. Simulink for controllers, SolidWorks or CATIA for hardware, custom software for training perception systems), these tools cover only a small part of the overall robotics design problem, which includes sensing, actuation, perception, navigation, control, and decision-making subsystems. In addition to being interconnected, these subsystems often have a large number of parameters that require tuning to achieve good performance (neural network-based perception is an extreme example of this trend). Moreover, since few robotic systems are exactly alike, an effective design tool must allow the user to select an appropriate level of abstraction for the problem at hand. As a result, there is a need for flexible computational tools that can help designers optimize complex robotic systems.
@@ -223,7 +222,7 @@ Our second example involves finding a control strategy for multi-agent collabora
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=0.9\linewidth]{rss/mam_composite_w_sim.png}
+    \includegraphics[width=\linewidth]{rss/mam_composite_w_sim.png}
     \caption{Left: Initial (top) and optimized (bottom) manipulation strategies in simulation (light/dark colors indicate initial/final positions, stripes indicate desired position). Right: Optimized manipulation strategy deployed in hardware (video included in the supplementary materials). (a) The robots first move to positions around the box. (b) Using the optimized neural network, the robots plan a cubic spline trajectory pushing the box to its desired location. (c-d) The robots execute the plan by tracking that trajectory.}
     \label{ch:rss:fig:mam_hw}
 \end{figure}
@@ -324,7 +323,16 @@ To answer these questions, we compare the cumulative distribution function (CDF)
 
 Fig.~\ref{ch:rss:fig:ks_test} compares the estimated GEVDs and empirical data for worst-case performance in the sensor placement example (fit using Algorithm~\ref{ch:rss:alg:worst_case_cost}) and sensitivity in the manipulation example (fit using Algorithm~\ref{ch:rss:alg:sensitivity}). In the former case, we see that the empirical CDF lies between the upper- and lower-confidence limits for the fit distribution, indicating that the fit is neither falsely optimistic at the 97\% level nor conservative at the 3\% level (these conclusions are confirmed by the KS statistics provided in Table~\ref{ch:rss:tab:ks_test_agv} in the appendix). In the latter case, even though the empirical CDF extends slightly beyond the estimated bounds in some regions, the statistical analysis in Table~\ref{ch:rss:tab:ks_test_mam} indicates that the estimated GEVD is neither falsely optimistic at the 97\% level nor conservative at the 3\% level. In addition, we see that the gap between the 3\% and 97\% distributions is relatively small in both examples in Fig.~\ref{ch:rss:fig:ks_test}.
 
-\begin{table*}[thb]
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width=0.45\linewidth]{rss/agv_gevd_comp.png}
+    \includegraphics[width=0.45\linewidth]{rss/mam_gevd_comp_friction.png}
+    \caption{Comparison of fit GEVD CDFs and empirical CDF for worst-case estimation error in the sensor placement example (top) and sensitivity in the manipulation example (bottom).}
+    \label{ch:rss:fig:ks_test}
+\end{figure}
+
+
+\begin{table}[thb]
     \renewcommand{\arraystretch}{1.5}
     \centering
     \begin{tabular}{r||p{4cm}|c|c|p{5cm}}
@@ -333,9 +341,9 @@ Fig.~\ref{ch:rss:fig:ks_test} compares the estimated GEVDs and empirical data fo
         Conservatism & 3\% GEVD over-estimates worst-case performance & 0.0529         & 0.00354 & Reject; 3\% GEVD \textit{does not} over-estimate worst-case performance
     \end{tabular}
     \caption{Results of one-sided KS tests for the sensor placement case study. These results indicate that Algorithm~\ref{ch:rss:alg:worst_case_cost} is sound in this case.}\label{ch:rss:tab:ks_test_agv}
-\end{table*}
+\end{table}
 
-\begin{table*}[thb]
+\begin{table}[thb]
     \renewcommand{\arraystretch}{1.5}
     \centering
     \begin{tabular}{r||p{4cm}|c|c|p{5cm}}
@@ -344,22 +352,12 @@ Fig.~\ref{ch:rss:fig:ks_test} compares the estimated GEVDs and empirical data fo
         Conservatism & 3\% GEVD over-estimates sensitivity & 0.0618         & $1.03\times10^{-10}$ & Reject; 3\% GEVD \textit{does not} over-estimate sensitivity
     \end{tabular}
     \caption{Results of one-sided KS tests for the collaborative manipulation case study. These results indicate that Algorithm~\ref{ch:rss:alg:sensitivity} is sound in this case.}\label{ch:rss:tab:ks_test_mam}
-\end{table*}
+\end{table}
 
-\section{Discussion}
+\section{Summary}
 
-In this paper, we develop an automated design tool to improve the productivity of robot designers by a) enabling efficient optimization of robot designs and b) allowing users to certify the robustness of those designs. In developing this framework, we make two main algorithmic and theoretical contributions. First, we use differentiable programming for end-to-end optimization of robotic systems, creating a flexible software framework for design optimization. Second, we develop a novel statistical framework for certifying the worst-case performance and sensitivity of optimized designs.
+In this chapter, we introduce an automated design tool to improve the productivity of robot designers by a) enabling efficient optimization of robot designs and b) allowing users to certify the robustness of those designs. In developing this framework, we make two main contributions. First, we use differentiable programming for end-to-end optimization of robotic systems, creating a flexible software framework for design optimization. Second, we develop a novel statistical framework for certifying the worst-case performance and sensitivity of optimized designs.
+%
+We apply these tools to optimize the design of two robotic systems in hardware. We use our statistical certification method to test the robustness of these designs, and we show that the optimized designs are robust enough to deploy in hardware. We hope that by combining flexible design optimization with robustness certification, this framework makes the first steps towards developing an automated design aid for robotics engineers and accomplishing the vision of this thesis.
 
-To validate this framework and demonstrate the usefulness of our contributions, we present two case studies to highlight how our framework can be used for design optimization in practical robotics problems. Moreover, we show that our optimized designs are robust enough to deploy in hardware, and data from these hardware experiments validate our optimization approach. Finally, we provide an ablation study to justify the architecture of our optimization framework and a statistical analysis showing the soundness of our robustness analysis techniques. We hope that by combining flexible design optimization with robustness certification in our framework we can increase the productivity of robotics engineers, shorten the design cycle, and help bring more complex robotic systems to life.
-
-
-% TODO update this for flow
-There are a number of interesting directions for future work. First, since our approach relies on sampling from $\Phi$ without any further information, it will require a large number of samples to accurately capture rare events. We can close this gap when more information about $\Phi$ is available, perhaps using adversarial testing or importance sampling. Second, our framework is currently focused on tuning continuous parameters; we hope to incorporate stochastic search over discrete parameters in a future work. Finally, we hope to expand the software implementation of our framework to include a richer library of autonomy building blocks and demonstrate a wider range of applications in designing autonomous systems, including robotic arms, autonomous air and spacecraft, and networked autonomous systems.
-
-\begin{figure}[tb]
-    \centering
-    \includegraphics[width=0.45\linewidth]{rss/agv_gevd_comp.png}
-    \includegraphics[width=0.45\linewidth]{rss/mam_gevd_comp_friction.png}
-    \caption{Comparison of fit GEVD CDFs and empirical CDF for worst-case estimation error in the sensor placement example (top) and sensitivity in the manipulation example (bottom).}
-    \label{ch:rss:fig:ks_test}
-\end{figure}
+That said, there are several limitations with the approach presented in this chapter. First, since our approach relies on sampling from $\Phi$ without any further information, it will require a large number of samples to accurately capture rare events. As we will see in the following chapters, we can close this gap when more information about $\Phi$ is available by using adversarial optimization and Bayesian sampling techniques. Second, the statistical verification method yields an estimate of the worst-case cost, but it does not provide any insights into what environmental factors could lead to that worst-case performance. Finally, the optimization approach presented in this chapter is based on gradient descent, which is inherently local (i.e. it risks converging to a suboptimal solution) and prone to failing when the gradients of $J\circ S$ are not well behaved. We will address both of these limitations in the following chapters, starting with an adversarial optimization method that reduces the number of samples from $\Phi$ required for robust solutions, and then discussing a novel reformulation of the end-to-end design optimization problem that allows us to search for (approximately) globally optimal solutions and avoid issues due to poorly conditioned gradients.

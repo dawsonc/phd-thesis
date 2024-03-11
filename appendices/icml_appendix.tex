@@ -6,13 +6,13 @@ This section provides additional details for the three types of inverse problem 
 
 \subsection{Seismic Waveform Inversion}
 
-An illustration of the SWI problem is given in Fig.~\ref{fig:swi_explainer}. We implement the SWI problem using the Deepwave library~\cite{richardsonDeepwave2023}. We use latent parameters $z \in \R^{n_x \times n_y}$ representing the subsurface density profile (with spatial resolution $n_x$ and $n_y$), context $y \in \R^{n_T}$ representing the source signal, and observations $x \in \R^{n_{s} \times n_{r} \times n_{T}}$ representing the signal measured at each receiver, where $n_s, n_r, n_T$ are the number of sources, receivers, and timesteps, respectively. The observations are corrupted with additive isotropic Gaussian noise.
+An illustration of the SWI problem is given in Fig.~\ref{ch:icml:fig:swi_explainer}. We implement the SWI problem using the Deepwave library~\cite{richardsonDeepwave2023}. We use latent parameters $z \in \R^{n_x \times n_y}$ representing the subsurface density profile (with spatial resolution $n_x$ and $n_y$), context $y \in \R^{n_T}$ representing the source signal, and observations $x \in \R^{n_{s} \times n_{r} \times n_{T}}$ representing the signal measured at each receiver, where $n_s, n_r, n_T$ are the number of sources, receivers, and timesteps, respectively. The observations are corrupted with additive isotropic Gaussian noise.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\linewidth]{figs/swi_results/swi_overview.pdf}
+    \includegraphics[width=0.6\linewidth]{images/icml/swi_results/swi_overview.pdf}
     \caption{(Left) An illustration of the SWI problem and (right) the receiver measurements (blue) given a source signal (black).}
-    \label{fig:swi_explainer}
+    \label{ch:icml:fig:swi_explainer}
 \end{figure}
 
 \subsection{UAV Control}

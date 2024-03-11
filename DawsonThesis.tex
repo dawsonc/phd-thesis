@@ -159,11 +159,11 @@
 % Most of the document metadata is created automatically. 
 % The following items should be adjusted to match your work. <================= !!!!!!!!!!
 
-\hypersetup{%  % TODO
-	pdfsubject={Template for writing MIT theses with the mitthesis class},
+\hypersetup{%
+	pdfsubject={Automatic design tools for optimizing robotic and cyberphysical systems.},
 	% Change this to briefly state topic of your thesis 
 % 
-	pdfkeywords={Massachusetts Institute of Technology, MIT},
+	pdfkeywords={Massachusetts Institute of Technology, MIT, automatic differentiation, differentiable simulation, end-to-end optimization, safety verification, failure diagnosis},
 	% Add keywords that will help search engines and libraries to find your work.
 	% Includes the name[s] of the author[s] 
 	% (If you have used \DocumentMetadata, at line 15, you can just put "\CopyrightAuthor," for the names.)
@@ -172,7 +172,7 @@
 	% If you have a url for the thesis, put it here. Otherwise delete this.
 	% (MIT Libraries will put your thesis in DSPACE with a persistent url after you submit it.)
 %	
-	pdfcontactemail={},
+	pdfcontactemail={charles.dwsn@gmail.com},
 	% You can put a [permanent] email address into the metadata, if you like.
 	% Otherwise delete this.
 %
@@ -187,7 +187,7 @@
 
 %%% edit the following commands to match your thesis %%%%%%%%%%
 
-\title{Safety in an uncertain world: model-based verification-guided design for safety-critcial autonomous systems}
+\title{Breaking things so you don't have to: simulation-driven verification and design for safe autonomous systems}
 
 % \Author{Author full name}{Author department}[Author's first PREVIOUS degree][Author's second PREVIOUS degree][...
 % Note that third, fourth, fifth, and sixth arguments are optional [] and may be omitted
@@ -217,7 +217,7 @@
 \DegreeDate{May}{2024}
 
 % Date that final thesis is submitted to department
-\ThesisDate{May 16, 2024}  % TODO
+\ThesisDate{May 16 (TBD), 2024}
 
 %%%%%%  Choose whether to have a CREATIVE COMMONS License  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -291,13 +291,13 @@
 % \onehalfspacing
 \doublespacing
 
-\include{chapters/introduction}  % TODO introduction
+\include{chapters/introduction}
 \include{chapters/literature_review}
 \include{chapters/rss}
 \include{chapters/iros}
 \include{chapters/corl}
 \include{chapters/icml}
-% TODO conclusion
+\include{chapters/conclusion}
 
 %%% Appendicies of thesis  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -311,6 +311,9 @@
 \singlespacing
 
 \printbibliography[title={References},heading=bibintoc]
+
+\subsection*{Image acknowledgement}
+Figs.~\ref{ch:corl:fig:environments} and~\ref{ch:corl:fig:repairs} was created using assets designed by Macrovector/Freepix; used with permission.
 
 % biblatex also supports chapter-by-chapter bibliography, https://tex.stackexchange.com/a/296502/119566
 % see the biblatex manual, section 3.14.3
