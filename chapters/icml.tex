@@ -149,7 +149,7 @@ Since the relatively large amount of nominal data makes it easy to fit the nomin
 
 We implement \ouralg{} using neural spline flows (NSF) as the underlying normalizing flow~\cite{durkanNeuralSplineFlows2019}. Since \ouralg{} is agnostic to the underlying flow architecture, we also tried masked autoregressive flows~\cite{huangNeuralAutoregressiveFlows2018}, which trained faster but had slightly worse performance, and continuous normalizing flows~\cite{chenNeuralOrdinaryDifferential2018}, which trained much more slowly.
 %
-We implement $\beta$-NSF using neural spline flows with a KL regularization penalty between the learned anomaly and nominal posteriors. We implement an RNODE-derived method that includes only the $W_2$ regularization term, not the Froebenius norm regularization term (which is used only to speed training and inference, not to regularize the learned posterior;~\cite{finlayHowTrainYour2020}).
+We implement $\beta$-NSF using neural spline flows with a KL regularization penalty between the learned anomaly and nominal posteriors. We implement an RNODE-derived method that includes only the $W_2$ regularization term, not the Frobenius norm regularization term (which is used only to speed training and inference, not to regularize the learned posterior;~\cite{finlayHowTrainYour2020}).
 
 All methods were implemented in Pytorch using the Zuko library for normalizing flows~\cite{ProbabilistsZuko2024}. The neural spline flows used 3 stacked transforms, and all flows used two hidden layers of 64 units each with ReLU activation (except for the continuous flows on the 2D problem, which use two hidden layers of 128 units each). All flows were trained using the Adam optimizer with the learning rate $10^{-3}$ (except on the UAV problem, which used a learning rate of $10^{-2}$) and gradient clipping. \ouralg{} used $K=5$ on all problems. All methods were trained on a single NVIDIA GeForce RTX 2080 Ti GPU, with 200, 500, 1000, and 300 epochs for the 2D, SWI, UAV, and ATC problems, respectively.
 
@@ -188,6 +188,7 @@ In this section, we apply our method to a post-mortem analysis of the 2022 South
         \caption{Cancellations at the 10 busiest airports in Southwest's network during the first four days of the disruption.}
         \label{ch:icml:fig:wn_cancellations:cancellations}
     \end{subfigure}
+    \caption{Analysis of data observed during the 2022 Southwest Airlines incident.}
     % \label{ch:icml:fig:wn_cancellations}
 \end{figure}
 
@@ -222,7 +223,7 @@ This result agrees with press and official accounts that identify winter weather
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{images/icml/wn/wn_top4_service_times.pdf}
-    \caption{The posterior distribution indicates that service times (including taxiing, de-icing, and ATC delays) increased at DEN, MDW, and DAL, which were hit by a winter storm, but were unchanged at LAS, which did not see severe weather.}
+    \caption{The posterior distribution (inferred using our method) indicates that service times (including taxiing, de-icing, and ATC delays) increased at DEN, MDW, and DAL, which were hit by a winter storm, but were unchanged at LAS, which did not see severe weather.}
     \label{ch:icml:fig:wn_service_times}
 \end{figure}
 

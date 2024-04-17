@@ -31,17 +31,17 @@ This unnormalized distribution is shown on the right in Fig.~\ref{ch:corl:fig:to
     \centering
     \begin{subfigure}[b]{\linewidth}
         \centering
-        \includegraphics[width=0.9\linewidth]{images/global_methods/sampling_as_optimization.png}
-        \caption{Left: a simple bimodal cost landscape $U(x) = x^4 - 0.5 x^3 - x^2$, with a locally optimal solution at $x\approx -0.544$ and a global optimum at $x\approx 0.919$. Right: the corresponding unnormalized likelihood $p(x) \propto e^{-U(x)}$, showing samples drawn from this distribution (black dots) and the average of 100 samples (red dot).}
+        \includegraphics[width=0.7\linewidth]{images/global_methods/sampling_as_optimization.png}
+        \caption{Left: a bimodal cost landscape $U(x) = x^4 - 0.5 x^3 - x^2$ with a local optimum at $x\approx -0.544$ and a global optimum at $x\approx 0.919$. Right: the corresponding unnormalized likelihood $p(x) \propto e^{-U(x)}$, samples drawn from this distribution (black dots), and the average of 100 samples (red dot).}
         \label{ch:corl:fig:toy_example}
     \end{subfigure}
-
     \begin{subfigure}[b]{\linewidth}
         \centering
         \includegraphics[width=0.7\linewidth]{images/global_methods/double_well_gd_mala.png}
         \caption{Convergence of gradient-based optimization and inference (Metropolis-adjusted Langevin) on the double-well cost landscape from Fig.~\ref{ch:corl:fig:toy_example}, showing how the optimization method gets stuck in a local minimum while the inference method is able to escape and find the global minimum.}
         \label{ch:corl:fig:toy_example_convergence}
     \end{subfigure}
+    \caption{A simple example demonstrating the use of MCMC on multimodal optimization problems.}
 \end{figure}
 
 A wide variety of MCMC algorithms exist to sample from arbitrary non-normalized probability distributions~\cite{geyerIntroductionMarkovChain2011}; common variants include Random-walk Metropolis-Hastings (RMH), Hamiltonian Monte Carlo (HMC), unadjusted Langevin (ULA), and MALA. RMH is gradient-free, while HMC, ULA, and MALA are gradient-based. MALA, which can be seen as a single-step version of HMC, is outlined in Algorithm~\ref{ch:corl:alg:mala}. Like all MCMC algorithms, it defines a Markov chain with a transition rule designed to preserve the so-called detailed balance condition, which ensures that the stationary distribution of the Markov chain is the same as the target density (see~\cite{geyerIntroductionMarkovChain2011,aiama} for a more complete introduction). MALA defines a transition rule that begins by proposing a candidate state in line~\ref{ch:corl:alg:mala:step} using a gradient-driven drift term and a Gaussian diffusion term. The candidate state is accepted with probability $P_{accept}$ in line~\ref{ch:corl:alg:mala:mh}, which is proportional to the ratio of the target density at the candidate and current states. If the candidate state is accepted, it becomes the new current state; otherwise, the current state is repeated. The algorithm is run for $K$ steps, and the final state is returned as the sample from the target density.
@@ -115,10 +115,6 @@ We attribute this improved performance to three factors. First, the Gaussian dif
     \caption{Convergence of gradient-based optimization (gradient descent), gradient-based inference (MALA), and gradient-free inference (RMH) on the ballistic cost landscape from Fig.~\ref{ch:corl:fig:toy_example}.}
     \label{ch:corl:fig:ballistic_convergence}
 \end{figure}
-
-% \subsection{Scaling gradient-based inference to high dimensions}
-
-% TODO include results from additional benchmark problems, maybe even empirical convergence rates as a function of dimension on a number of problems. Introduce theoretical results.
 
 \section{Sampling and repairing diverse failure modes}
 
@@ -329,7 +325,7 @@ In both AV tasks, the actions of the non-ego vehicles are uncertain, and the AV 
 \textit{Drone:} A drone must safely navigate through a cluttered environment in windy conditions. There is uncertainty in the wind speed and location of all obstacles.
 %  \textit{Drone (dynamic):} the same but the obstacles move with uncertain velocities.
 %
-Initial convolutional neural network (CNN) policies $\theta_0$ for drone and intersection environments were pretrained using behavior cloning, and CNN-based policies for the highway environment were pretrained using PPO~\cite{schulmanProximalPolicyOptimization2017}.
+Initial convolutional neural network (CNN) policies $\theta_0$ for drone and intersection environments were pre-trained using behavior cloning, and CNN-based policies for the highway environment were pre-trained using PPO~\cite{schulmanProximalPolicyOptimization2017}.
 %
 \textit{Grasp (box/mug): } a robot must locate and grasp an object using a depth image of the scene. There is uncertainty in the location of the objects and in the location of a nearby distractor object. The grasp detector is trained with labels of ground-truth grasp affordances.
 
@@ -418,7 +414,7 @@ We see a slightly different pattern in our results for problems with vision in t
 
 \section{Case studies}\label{ch:corl:case_studies}
 
-In this next section, we present three case studies to illustrate the practical use of our method. We first demonstrate how RADIUM can be used to solve a challenging optimization problem arising in the control of electrical power systems. We then provide a case study showing how RADIUM can be applied to robotics problems and transferred to hardware.  %  TODO one case study for draft for committee
+In this next section, we present three case studies to illustrate the practical use of our method. We first demonstrate how RADIUM can be used to solve a challenging optimization problem arising in the control of electrical power systems. We then provide two case studies showing how RADIUM can be applied to robotics problems and transferred to hardware, including one case study demonstrating sim2real transfer of vision-in-the-loop robot control policies.
 
 \subsection{Robust generation dispatch for secure power networks}
 
@@ -522,12 +518,54 @@ We deploy the optimized hider and seeker trajectories in hardware using the Robo
 \end{figure}
 
 Although the gap between simulation and reality is not particularly large in this case, there are effects present in the hardware system that we did not model in our simulator (e.g. the collision-avoidance safety filter used by the Robotarium). Despite this small gap, this case study serves as a useful proof-of-concept for transferring optimized designs from simulation to hardware.
-%
-% In the next case study, we will demonstrate the transfer of failure modes and repaired designs in a much more challenging environment with vision in the loop.
 
-% \subsection{Case study on vision-in-the-loop control of a model racecar}
+In the next case study, we will demonstrate the transfer of failure modes and repaired designs in a much more challenging environment with vision in the loop.
 
-% TODO
+\subsection{Vision-in-the-loop control of a 1/10-scale race car}
+
+In our simulation studies in Section~\ref{ch:corl:experiments}, we introduced a highway driving task where an autonomous vehicle must overtake two slower cars using visual feedback to avoid collision with other agents. In this case study, we return to this example, developing a hardware test environment where the autonomous agent controls a 1/10\textsuperscript{th}-scale race car and the two non-ego agents are represented by TurtleBots.
+
+We pre-train a policy for the highway task that has three components: a tracking controller that follows a pre-planned trajectory, a model-based collision avoidance controller that attempts to avoid rear-ending cars in front of the ego vehicle (using the depth camera to measure the distance to the next car), and a neural network controller that accelerates and steers based on the depth image received from a forward facing camera. The parameters of the neural network and the pre-planned trajectory are optimized via vanilla gradient descent during pre-training. The cost function is the negative minimum reward observed during each rollout:
+\begin{align}
+    J   & = -\widetilde{\min}_t\pn{r_t}            \\
+    r_t & = 0.1 (x_t - x_{t-1}) - 5 \sigma(-5 d_t)
+\end{align}
+where $\widetilde{\min}_t$ is a soft minimum (as defined in Chapter~\ref{ch:iros}) over time, with sharpness parameter $10$. $r_t$ is the reward at each timestep, defined as the weighted sum of the distance traveled along the highway and a term that penalizes collisions. $\sigma$ is the sigmoid function and $d_t$ is the minimum distance between the ego vehicle and the nearest obstacle at time $t$.
+
+We then use $R_1$ to predict failure modes for this pre-trained, vision-in-the-loop policy in simulation, then transfer both the pre-trained policy and predicted failure modes to hardware. As shown in Fig.~\ref{ch:corl:fig:hw:car:fail}, the failure modes predicted in simulation correspond to real failures on hardware. We then repair the policy using $R_1$, which results in an updated policy and new predicted worst-case failure mode, shown in Fig.~\ref{ch:corl:fig:hw:car:repair}. Since $R_1$ predicts different failure modes for the nominal and repaired policies, Table~\ref{ch:corl:tab:hw:metrics} compares the failure rates of both policies on 20 independent samples of $\phi$ from the prior distribution, showing that the repaired policy is 5x safer than the original policy.
+
+These results demonstrate that both the predicted failure modes and the repaired policy can successfully transfer from simulation to hardware, despite the gap between the simulated dynamics and rendering system and reality. A benefit of the sampling-based approach proposed in $R_0$ and $R_1$ is that the noise added during the sampling step helps us avoid converging to narrow local minima, avoiding failures that occur only due to quirks in the simulation environment.
+
+\begin{figure}[tb]
+    \centering
+    \subfloat[Nominal policy]{
+        \includegraphics[height=6cm]{images/corl/f1tenth/nominal_crash/composite_cropped.png}
+        \label{ch:corl:fig:hw:car:fail}
+    }
+    \subfloat[Repaired policy]{
+        \includegraphics[height=6cm]{images/corl/f1tenth/repaired_nocrash/composite_crop.png}
+        \label{ch:corl:fig:hw:car:repair}
+    }
+    \caption{Composite images from hardware experiments with vision-in-the-loop controllers. (Left) the nominal policy and the worst adversarial example found using our method, where a crash occurs. (Right) the repaired policy and new worst adversarial example (both found using our method); the repaired policy avoids crashing in this case.}
+    \label{ch:corl:fig:hw:car}
+\end{figure}
+
+\begin{table}[htb]
+    \caption{
+        Failure rate on 1000 simulated and 20 hardware trials of nominal and repaired policies with exogenous parameters sampled i.i.d. from the prior $p_{\phi, 0}$.
+    }
+    \label{ch:corl:tab:hw:metrics}
+    \begin{center}
+        \begin{tabular}{lcc}
+            \toprule
+            Policy   & Failure rate (simulation) & Failure rate (hardware) \\
+            \midrule
+            Nominal  & 4.4 \%                    & 25\%                    \\
+            Repaired & 0.6 \%                    & 5\%                     \\
+            \bottomrule
+        \end{tabular}
+    \end{center}
+\end{table}
 
 \section{Summary}
 

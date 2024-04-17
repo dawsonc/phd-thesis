@@ -15,5 +15,6 @@
         "**/*.run.xml": true,
         "**/*.lot": true,
         "**/*.lof": true
-    }
+    },
+    "cmake.configureOnOpen": false
 }

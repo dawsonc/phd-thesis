@@ -44,10 +44,6 @@ Existing methods require careful tuning of hyperparameters to avoid overfitting 
 
 We find that our method is able to outperform state-of-the-art regularized inference methods without requiring any hyperparameter tuning. We apply \ouralg{} to a real-world case study into the causes of the 2022 Southwest Airlines scheduling crisis, where we are able to infer how hidden changes in the distribution of aircraft within the Southwest network contributed to the disruption and allowed local disturbances to cascade into system-wide failures.
 
-% \section{Summary of contributions}
-
-% % TODO
-
 \section{Outline}
 
 This thesis is structured as follows. Chapter~\ref{section:lit_review} provides relevant background on design and verification tools for autonomous systems. Chapters~\ref{ch:rss}--\ref{ch:corl} develop a series of increasingly capable simulation-driven design and verification tools that rely on program analysis techniques to efficiently find and repair failure modes in autonomous systems. In particular, Chapter~\ref{ch:rss} introduces the end-to-end design optimization problem, demonstrates how it can be solved using differentiable simulation, and provides a statistical framework for robustness certification, Chapter~\ref{ch:iros} improves the sample efficiency of design optimization using adversarial optimization techniques, and Chapter~\ref{ch:corl} introduces a novel reformulation of this adversarial optimization approach through the lens of Bayesian inference, leading to the ability to efficiently predict and repair a diverse set of possible failure modes. While Chapters~\ref{ch:rss}--\ref{ch:corl} deal with testing an autonomous system in simulation \textit{prior} to deployment, Chapter~\ref{ch:icml} introduces a framework for diagnosing and explaining anomalies encountered \textit{after} deployment. Chapter~\ref{section:conclusion} concludes the thesis and outlines possible areas for future work.
