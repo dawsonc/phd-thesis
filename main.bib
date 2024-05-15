@@ -1233,6 +1233,23 @@
   file = {/home/cbd/Zotero/storage/TP9NHJ7Y/Deasy et al. - 2020 - Constraining variational inference with geometric .pdf}
 }
 
+@inproceedings{decastroCounterexampleGuidedSafetyContracts2020,
+  title = {Counterexample-{{Guided Safety Contracts}} for {{Autonomous Driving}}},
+  booktitle = {Algorithmic {{Foundations}} of {{Robotics XIII}}},
+  author = {DeCastro, Jonathan and Liebenwein, Lucas and Vasile, Cristian-Ioan and Tedrake, Russ and Karaman, Sertac and Rus, Daniela},
+  editor = {Morales, Marco and Tapia, Lydia and {S{\'a}nchez-Ante}, Gildardo and Hutchinson, Seth},
+  year = {2020},
+  pages = {939--955},
+  publisher = {Springer International Publishing},
+  address = {Cham},
+  doi = {10.1007/978-3-030-44051-0_54},
+  abstract = {Ensuring the safety of autonomous vehicles is paramount for their successful deployment. However, formally verifying autonomous driving decisions systems is difficult. In this paper, we propose a framework for constructing a set of safety contracts that serve as design requirements for controller synthesis for a given scenario. The contracts guarantee that the controlled system will remain safe with respect to probabilistic models of traffic behavior, and, furthermore, that it will follow rules of the road. We create contracts using an iterative approach that alternates between falsification and reachable set computation. Counterexamples to collision-free behavior are found by solving a gradient-based trajectory optimization problem. We treat these counterexamples as obstacles in a reach-avoid problem that quantifies the set of behaviors an ego vehicle can make while avoiding the counterexample. Contracts are then derived directly from the reachable set. We demonstrate that the resulting design requirements are able to separate safe from unsafe behaviors in an interacting multi-car traffic scenario, and further illustrate their utility in analyzing the safety impact of relaxing traffic rules.},
+  isbn = {978-3-030-44051-0},
+  langid = {english},
+  keywords = {Collision avoidance,Falsification,Logic and verification,Rules of the road},
+  file = {/home/cbd/Zotero/storage/A3BFG9XU/DeCastro et al. - 2020 - Counterexample-Guided Safety Contracts for Autonom.pdf}
+}
+
 @inproceedings{decastroInterpretablePoliciesFormallySpecified2020,
   title = {Interpretable {{Policies}} from {{Formally-Specified Temporal Properties}}},
   booktitle = {{{IEEE Int}}. {{Conf}}. on {{Intelligent Transportation Systems}}},
@@ -1635,6 +1652,21 @@
   urldate = {2023-03-17},
   abstract = {Deep neural networks (DNNs) are vulnerable to adversarial examples--maliciously crafted inputs that cause DNNs to make incorrect predictions. Recent work has shown that these attacks generalize to the physical domain, to create perturbations on physical objects that fool image classifiers under a variety of real-world conditions. Such attacks pose a risk to deep learning models used in safety-critical cyber-physical systems. In this work, we extend physical attacks to more challenging object detection models, a broader class of deep learning algorithms widely used to detect and label multiple objects within a scene. Improving upon a previous physical attack on image classifiers, we create perturbed physical objects that are either ignored or mislabeled by object detection models. We implement a Disappearance Attack, in which we cause a Stop sign to "disappear" according to the detector--either by covering the sign with an adversarial Stop sign poster, or by adding adversarial stickers onto the sign. In a video recorded in a controlled lab environment, the state-of-the-art YOLO v2 detector failed to recognize these adversarial Stop signs in over 85\% of the video frames. In an outdoor experiment, YOLO was fooled by the poster and sticker attacks in 72.5\% and 63.5\% of the video frames respectively. We also use Faster R-CNN, a different object detection model, to demonstrate the transferability of our adversarial perturbations. The created poster perturbation is able to fool Faster R-CNN in 85.9\% of the video frames in a controlled lab environment, and 40.2\% of the video frames in an outdoor environment. Finally, we present preliminary results with a new Creation Attack, wherein innocuous physical stickers fool a model into detecting nonexistent objects.},
   keywords = {00-read}
+}
+
+@inproceedings{eykholtRobustPhysicalWorldAttacks2018,
+  title = {Robust {{Physical-World Attacks}} on {{Deep Learning Visual Classification}}},
+  booktitle = {2018 {{IEEE}}/{{CVF Conference}} on {{Computer Vision}} and {{Pattern Recognition}}},
+  author = {Eykholt, Kevin and Evtimov, Ivan and Fernandes, Earlence and Li, Bo and Rahmati, Amir and Xiao, Chaowei and Prakash, Atul and Kohno, Tadayoshi and Song, Dawn},
+  year = {2018},
+  month = jun,
+  pages = {1625--1634},
+  issn = {2575-7075},
+  doi = {10.1109/CVPR.2018.00175},
+  urldate = {2024-05-10},
+  abstract = {Recent studies show that the state-of-the-art deep neural networks (DNNs) are vulnerable to adversarial examples, resulting from small-magnitude perturbations added to the input. Given that that emerging physical systems are using DNNs in safety-critical situations, adversarial examples could mislead these systems and cause dangerous situations. Therefore, understanding adversarial examples in the physical world is an important step towards developing resilient learning algorithms. We propose a general attack algorithm, Robust Physical Perturbations (RP2), to generate robust visual adversarial perturbations under different physical conditions. Using the real-world case of road sign classification, we show that adversarial examples generated using RP2 achieve high targeted misclassification rates against standard-architecture road sign classifiers in the physical world under various environmental conditions, including viewpoints. Due to the current lack of a standardized testing method, we propose a two-stage evaluation methodology for robust physical adversarial examples consisting of lab and field tests. Using this methodology, we evaluate the efficacy of physical adversarial manipulations on real objects. With a perturbation in the form of only black and white stickers, we attack a real stop sign, causing targeted misclassification in 100\% of the images obtained in lab settings, and in 84.8\% of the captured video frames obtained on a moving vehicle (field test) for the target classifier.},
+  keywords = {Autonomous vehicles,Cameras,Detectors,Perturbation methods,Pipelines,Roads,Visualization},
+  file = {/home/cbd/Zotero/storage/EIQG6MHU/Eykholt et al. - 2018 - Robust Physical-World Attacks on Deep Learning Vis.pdf;/home/cbd/Zotero/storage/YVSQ87ZM/8578273.html}
 }
 
 @article{facchineiGeneralizedNashEquilibrium2007,
@@ -3392,6 +3424,23 @@
   urldate = {2024-01-30},
   abstract = {Recently, different machine learning methods have been introduced to tackle the challenging few-shot learning scenario that is, learning from a small labeled dataset related to a specific task. Common approaches have taken the form of meta-learning: learning to learn on the new problem given the old. Following the recognition that meta-learning is implementing learning in a multi-level model, we present a Bayesian treatment for the meta-learning inner loop through the use of deep kernels. As a result we can learn a kernel that transfers to new tasks; we call this Deep Kernel Transfer (DKT). This approach has many advantages: is straightforward to implement as a single optimizer, provides uncertainty quantification, and does not require estimation of task-specific parameters. We empirically demonstrate that DKT outperforms several state-of-the-art algorithms in few-shot classification, and is the state of the art for cross-domain adaptation and regression. We conclude that complex meta-learning routines can be replaced by a simpler Bayesian model without loss of accuracy.},
   file = {/home/cbd/Zotero/storage/8FV752T4/Patacchiola et al. - 2020 - Bayesian Meta-Learning for the Few-Shot Setting vi.pdf}
+}
+
+@article{pekFailSafeMotionPlanning2021,
+  title = {Fail-{{Safe Motion Planning}} for {{Online Verification}} of {{Autonomous Vehicles Using Convex Optimization}}},
+  author = {Pek, Christian and Althoff, Matthias},
+  year = {2021},
+  month = jun,
+  journal = {IEEE Transactions on Robotics},
+  volume = {37},
+  number = {3},
+  pages = {798--814},
+  issn = {1941-0468},
+  doi = {10.1109/TRO.2020.3036624},
+  urldate = {2024-05-10},
+  abstract = {Safe motion planning for autonomous vehicles is a challenging task, since the exact future motion of other traffic participant is usually unknown. In this article, we present a verification technique ensuring that autonomous vehicles do not cause collisions by using fail-safe trajectories. Fail-safe trajectories are executed if the intended motion of the autonomous vehicle causes a safety-critical situation. Our verification technique is real-time capable and operates under the premise that intended trajectories are only executed if they have been verified as safe. The benefits of our proposed approach are demonstrated in different scenarios on an actual vehicle. Moreover, we present the first in-depth analysis of our verification technique used in dense urban traffic. Our results indicate that fail-safe motion planning has the potential to drastically reduce accidents while not resulting in overly conservative behaviors of the autonomous vehicle.},
+  keywords = {Autonomous vehicles,fail-safe operation,formal verification,Integrated circuits,motion planning,Planning,Real-time systems,Robots,safe states,Safety,set-based computation,Trajectory},
+  file = {/home/cbd/Zotero/storage/Q5DPL777/Pek and Althoff - 2021 - Fail-Safe Motion Planning for Online Verification .pdf;/home/cbd/Zotero/storage/4UZLMQKR/9302873.html}
 }
 
 @article{plakuMotionPlanningTemporallogic2016,
