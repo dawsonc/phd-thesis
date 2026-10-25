@@ -564,6 +564,60 @@ Title:\space  \seq_item:cn { g_supervisor_title_seq } { \l__supervisor_superviso
 
 %%%%%%%%%%  End Supervisor Module  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%  CommitteeMember Module  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\seq_new:N \g_committee_member_name_seq
+\seq_new:N \g_committee_member_title_seq
+\int_gzero_new:N \g_committee_member_committee_membercnt_int
+
+
+\NewDocumentCommand\CommitteeMember{mm}{
+	\tl_if_blank:nTF{#1}{
+		\msg_error:nn { \ClassName } { blank_committee_member }
+	}{
+		\__committee_member_data_add:nn {#1} {#2}
+	}
+	\tl_if_blank:nT{#2}{\msg_error:nn { \ClassName } { blank_committee_member_title } }
+}
+\msg_new:nnnn { \ClassName } { blank_committee_member }
+{ Missing\ committee_member\ name, check\ for\ blank\ in\ \CommitteeMember{name}{title}\ command.}{
+	You\ MUST\ provide\ the\ committee_member's\ name\ using\ the\ \CommitteeMember{name}{title}\ command.}
+\msg_new:nnnn { \ClassName } { blank_committee_member_title }
+{ Missing\ committee_member\ title, check\ for\ blank\ in\ \CommitteeMember{name}{title}\ command. }{
+	You\ MUST\ provide\ the\ committee_member's\ title\ using\ the\ \CommitteeMember{name}{title}\ command.}
+
+\cs_new_protected:Nn \__committee_member_data_add:nn
+{
+	\int_gincr:N \g_committee_member_committee_membercnt_int
+	\seq_gput_right:cx  { g_committee_member_name_seq }       { \tl_trim_spaces:n {#1} }
+	\seq_gput_right:cx  { g_committee_member_title_seq } { \tl_trim_spaces:n {#2} }
+}
+
+
+\cs_new:Nn \__committee_member_abstractblock: {
+\int_zero_new:N \l__committee_member_committee_memberno_int
+\int_incr:N     \l__committee_member_committee_memberno_int
+\setlength{\parindent}{0pt}
+\par\bigskip
+\int_compare:nNnTF { \g_committee_member_committee_membercnt_int } = {0} {
+\msg_error:nn { \ClassName } { no_committee_member }
+}
+{\int_until_do:nNnn { \l__committee_member_committee_memberno_int } = { \g_committee_member_committee_membercnt_int } {
+		Thesis\ committee_member:\space \seq_item:cn { g_committee_member_name_seq } { \l__committee_member_committee_memberno_int }\par
+		Title:\space              \seq_item:cn { g_committee_member_title_seq } { \l__committee_member_committee_memberno_int }\par\medskip
+		\int_incr:N \l__committee_member_committee_memberno_int
+	}
+Thesis\ Committee:\space  \seq_item:cn { g_committee_member_name_seq } { \l__committee_member_committee_memberno_int }\par
+Title:\space  \seq_item:cn { g_committee_member_title_seq } { \l__committee_member_committee_memberno_int }\ignorespaces
+}
+}
+\msg_new:nnnn { \ClassName } { no_committee_member }
+{ Missing\ committee_member!\ You\ must\ issue\ the\ \CommitteeMember{name}{title}\ command. }{
+	You\ MUST\ issue\ the\ \CommitteeMember{name}{title}\ command\ after\ \string\begin{document}\ and\ before\ \string\maketitle. }
+
+
+%%%%%%%%%%  End CommitteeMember Module  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 %%%%%%%%%%  Acceptor Module  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -734,6 +788,7 @@ Title:\space  \seq_item:cn { g_supervisor_title_seq } { \l__supervisor_superviso
 }
 \int_gzero_new:N \g__signature_autno_int
 \int_gzero_new:N \g__signature_supno_int
+\int_gzero_new:N \g__signature_comno_int
 \int_gzero_new:N \g__signature_accno_int
 \g__signature_sigsize_tl
 \dim_set:Nn \topsep {0pt}
@@ -750,6 +805,11 @@ Title:\space  \seq_item:cn { g_supervisor_title_seq } { \l__supervisor_superviso
 			\int_gincr:N  \g__signature_supno_int
 			Certified\ by: \> \seq_item:cn { g_supervisor_name_seq } { \g__signature_supno_int } \\
 			\> \seq_item:cn { g_supervisor_title_seq } { \g__signature_supno_int },\ Thesis\ Supervisor\\[1em]
+		}
+	\int_do_while:nNnn { \g__signature_comno_int } < { \g_committee_member_committee_membercnt_int } {
+			\int_gincr:N  \g__signature_comno_int
+			Certified\ by: \> \seq_item:cn { g_committee_member_name_seq } { \g__signature_comno_int } \\
+			\> \seq_item:cn { g_committee_member_title_seq } { \g__signature_comno_int },\ Committee\ Member\\[1em]
 		}
 	\int_compare:nNnF { \g_acceptor_acceptorcnt_int } = {0} {
 	\int_do_while:nNnn { \g__signature_accno_int } < { \g_acceptor_acceptorcnt_int } {
