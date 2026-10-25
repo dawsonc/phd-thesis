@@ -180,6 +180,19 @@
 	% If you have a title, you can include it here.
 }
 
+%% Make all links (ToC, cross-references, citations, urls) black.
+%% Must be in \AtBeginDocument to override the colors set by mitthesis.cls.
+\AtBeginDocument{%
+	\hypersetup{
+		linkcolor=black,
+		citecolor=black,
+		urlcolor=black,
+		filecolor=black,
+		menucolor=black,
+		runcolor=black,
+	}
+}
+
 %%%%%%%%%%%%%%  End preamble %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
